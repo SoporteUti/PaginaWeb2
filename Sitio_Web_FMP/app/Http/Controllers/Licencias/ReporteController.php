@@ -794,7 +794,7 @@ class ReporteController extends Controller
 
         $jornada = Jornada::selectRaw('jornada_items.dia, jornada_items.hora_inicio,jornada_items.hora_fin')
             ->join('periodos', 'periodos.id', '=', 'jornada.id_periodo')
-            ->join('jornada_items', 'jornada_items.id_jornada', '=', 'jornada.id_periodo')
+            ->join('jornada_items', 'jornada_items.id_jornada', '=', 'jornada.id')
             ->where([['jornada.id_emp', $request->_id], ['periodos.estado', 'activo']])
             ->get();
 
