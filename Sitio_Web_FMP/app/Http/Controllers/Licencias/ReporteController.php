@@ -1610,52 +1610,7 @@ class ReporteController extends Controller
     //FIN MOSTRAR EN LA TABLA DE LA VISTA DE LICENCIAS POR ACUERDO
 
     //PARA MOSTRAR EN LA TABLA DE LA VISTA DE REVISION MENSUALE A JEFES
-    public function mostrarTablaJefes($mes, $anio)
-    {
-
-        $permisos = Permiso::selectRaw('tipo_permiso, fecha_uso,fecha_presentacion,hora_inicio,hora_final,justificacion,permisos.estado,
-                observaciones,olvido,empleado.nombre,empleado.apellido')
-            ->join('empleado', 'empleado.id', '=', 'permisos.empleado')
-            ->where(
-                function ($query) {
-                    $query->where([
-                        ['permisos.estado', 'like', 'Aceptado'],
-                        ['permisos.jefatura', '=', auth()->user()->empleado]
-                    ]);
-                }
-            );
-
-
-        if ($anio != 'todos') {
-            $permisos = $permisos->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio);
-        }
-
-        if ($mes != 'todos') {
-            $permisos = $permisos->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $mes);
-        }
-
-        $permisos = $permisos->get();
-
-        foreach ($permisos as $item) {
-            # code...
-            $col3 = null;
-            if ($item->olvido == 'Entrada' || $item->olvido == 'Salida') {
-                $col3 = $item->olvido;
-            } else {
-                $col3 = '' . \Carbon\Carbon::parse($item->fecha_uso . 'T' . $item->hora_inicio)->diffAsCarbonInterval(\Carbon\Carbon::parse($item->fecha_uso . 'T' . $item->hora_final));
-            }
-
-
-
-            $data[] = array(
-                "col0" => $item->nombre . ' ' . $item->apellido,
-                "col1" => '<span class="badge badge-primary">' . $item->tipo_permiso . '</span>',
-                "col2" => \Carbon\Carbon::parse($item->fecha_uso)->format('d/M/Y'),
-                "col3" => $col3,
-            );
-        }
-        return isset($data) ? response()->json($data, 200, []) : response()->json([], 200, []);
-    }
+  
     //FIN DE MOSTRAR EN LA TABLA DE LA VISTA DE REVISION MENSUALE A JEFES
     public function mostrarTablaEmpleado($mes, $anio)
     {

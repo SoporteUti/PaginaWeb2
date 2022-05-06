@@ -124,6 +124,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     //PARA LAS IMPORTACIONES DE DATOS
     Route::get('Importaciones/Datos',[ImportacionesController::class,'index'])->name('Importaciones/inicio');
+    Route::get('Importaciones/Modificacion',[ImportacionesController::class,'mostrarVistaModificaciones'])->name('Importaciones/modificacion');
+    Route::get('Importaciones/Modificacion/tabla/{mes}/{anio}',[ImportacionesController::class,'mostrarTabla']);
+
+
     Route::post('Importaciones/Datos/Excel',[ImportacionesController::class,'import'])->name('Importaciones/Excel');
 
 

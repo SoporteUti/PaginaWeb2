@@ -246,6 +246,9 @@
                                         <li>
                                             <a href="{{ route('Importaciones/inicio') }}">Datos Reloj</a>
                                         </li>
+                                        <li>
+                                            <a href="{{ route('Importaciones/modificacion') }}">Modificación Datos Reloj</a>
+                                        </li>
                                 </ul>
                             </li>
                         @endif
