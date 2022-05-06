@@ -956,7 +956,7 @@ class ReporteController extends Controller
           where e.id=" . $request->_id_des . " and e.dui=r.id_persona
           and ji.dia=r.dia_semana and ji.hora_inicio::time+'00:05' < r.entrada::time
           and  to_char(r.fecha::date,'YYYY')::int=" . $request->des_anio . "
-          and to_char(r.fecha::date,'MM')::int=" . $request->des_mes . " and r.entrada !='-' and r.salida !='-'
+          and to_char(r.fecha::date,'MM')::int=" . $request->des_mes . " and r.entrada !='-'
           GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin,r.gracia order by r.fecha";
 
         $query = trim($query);
@@ -1320,7 +1320,7 @@ class ReporteController extends Controller
 
 
         $pdf = PDF::loadView('Reportes.Descuentos.DescuentoPersonal', compact('empleadito', 'request', 'reloj', 'descuento_inasistencia', 'descuento_sin_gose'));
-        return $pdf->setPaper('A4', 'Landscape')->download('Descuento Personal.pdf');
+        return $pdf->setPaper('A4', 'Landscape')->download('Descuentos.pdf');
     }
 
     //FIN DE GENERAR ASISTENCIA MENUAL PARA EMPLEADOS
