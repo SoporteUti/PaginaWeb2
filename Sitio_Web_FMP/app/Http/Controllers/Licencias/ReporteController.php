@@ -971,7 +971,7 @@ class ReporteController extends Controller
         /*-- calculo de minutos entrada--*/
         (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado'and permisos.tipo_permiso='Const. olvido' and permisos.olvido='Entrada')>0)
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
                 ((CASE WHEN (r.entrada='-' AND r.salida !='-') THEN 
                 ('0') else ('0')
@@ -982,7 +982,7 @@ class ReporteController extends Controller
         +
         (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado'and permisos.tipo_permiso='Const. olvido' and permisos.olvido='Entrada')>0)
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
                 ((CASE WHEN (r.entrada='-' AND r.salida !='-') THEN 
                 ('0') else ('0')
@@ -993,7 +993,7 @@ class ReporteController extends Controller
         +
         ROUND((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado'and permisos.tipo_permiso='Const. olvido' and permisos.olvido='Entrada')>0)
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
                 ((CASE WHEN (r.entrada='-' AND r.salida !='-') THEN 
                 ('0') else ('0')
@@ -1009,7 +1009,7 @@ class ReporteController extends Controller
                       to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric * --por minutos
             (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado'and permisos.tipo_permiso='Const. olvido' and permisos.olvido='Entrada')>0)
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
                 ((CASE WHEN (r.entrada='-' AND r.salida !='-') THEN 
                 ('0') else ('0')
@@ -1020,7 +1020,7 @@ class ReporteController extends Controller
         +
         (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado'and permisos.tipo_permiso='Const. olvido' and permisos.olvido='Entrada')>0)
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
                 ((CASE WHEN (r.entrada='-' AND r.salida !='-') THEN 
                 ('0') else ('0')
@@ -1031,7 +1031,7 @@ class ReporteController extends Controller
         +
         ROUND((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado'and permisos.tipo_permiso='Const. olvido' and permisos.olvido='Entrada')>0)
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
                 ((CASE WHEN (r.entrada='-' AND r.salida !='-') THEN 
                 ('0') else ('0')
@@ -1048,7 +1048,7 @@ class ReporteController extends Controller
         /*minutos salida*/
         (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado'and permisos.tipo_permiso='Const. olvido' and permisos.olvido='Salida')>0)
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
                 ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
                 ('0') else ('0')
@@ -1059,7 +1059,7 @@ class ReporteController extends Controller
         +
         (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado'and permisos.tipo_permiso='Const. olvido' and permisos.olvido='Salida')>0)
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
                 ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
                 ('0') else ('0')
@@ -1070,7 +1070,7 @@ class ReporteController extends Controller
         +
         ROUND((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado'and permisos.tipo_permiso='Const. olvido' and permisos.olvido='Salida')>0)
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
                 ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
                 ('0') else ('0')
@@ -1088,7 +1088,7 @@ class ReporteController extends Controller
                       to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric * --por minutos
             (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado'and permisos.tipo_permiso='Const. olvido' and permisos.olvido='Salida')>0)
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
                 ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
                 ('0') else ('0')
@@ -1099,7 +1099,7 @@ class ReporteController extends Controller
         +
         (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado'and permisos.tipo_permiso='Const. olvido' and permisos.olvido='Salida')>0)
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
                 ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
                 ('0') else ('0')
@@ -1110,7 +1110,7 @@ class ReporteController extends Controller
         +
         ROUND((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado'and permisos.tipo_permiso='Const. olvido' and permisos.olvido='Salida')>0)
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
                 ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
                 ('0') else ('0')
