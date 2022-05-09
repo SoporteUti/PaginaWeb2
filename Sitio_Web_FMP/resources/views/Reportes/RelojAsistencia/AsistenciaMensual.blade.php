@@ -79,6 +79,39 @@
 
         </h4>
     @endforeach
+
+    <h4 align="center">
+        @foreach ($periodos as $p)
+            Jornada Laboral para el periodo del :{{ Carbon\Carbon::parse($p->fecha_inicio)->format('d/M/Y') }} al
+            {{ Carbon\Carbon::parse($p->fecha_fin)->format('d/M/Y') }}<br>
+        @endforeach
+    </h4>
+
+    <table id="const" class="table">
+        <thead>
+            <tr>
+
+                <th style="text-align: center">Dia</th>
+                <th style="text-align: center">Hora Entrada</th>
+                <th style="text-align: center">Hora Salida</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($jornada as $j)
+                <tr>
+                    <td style="text-align: center;">{{ $j->dia }}</td>
+                    <td style="text-align: center;">{{ $j->hora_inicio }}</td>
+                    <td style="text-align: center;">{{ $j->hora_fin }}</td>
+                </tr>
+            @endforeach
+
+
+        </tbody>
+
+    </table>
+
+    <br>
    
     <h4 align="center">
         ASISTENCIA MENSUAL

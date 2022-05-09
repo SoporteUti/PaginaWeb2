@@ -1327,23 +1327,37 @@ class ReporteController extends Controller
 
     public function AsistenciaPersonalPDF(Request $request)
     {
-        
+
 
         $empleadito = Empleado::selectRaw('nombre, apellido,departamentos.nombre_departamento')
             ->join('departamentos', 'departamentos.id', '=', 'empleado.id_depto')
             ->where('empleado.dui', $request->dui)
             ->get();
 
-        $query = "select * from reloj_datos where id_persona='".$request->dui."' and  to_char(fecha::date,'YYYY')::int=".$request->asistencia_anio."
-        and to_char(fecha::date,'MM')::int=".$request->asistencia_mes."";
+        $jornada = Jornada::selectRaw('jornada_items.dia, jornada_items.hora_inicio,jornada_items.hora_fin')
+            ->join('empleado', 'empleado.id', '=', 'jornada.id_emp')
+            ->join('periodos', 'periodos.id', '=', 'jornada.id_periodo')
+            ->join('jornada_items', 'jornada_items.id_jornada', '=', 'jornada.id')
+            ->where([['empleado.dui', $request->dui], ['periodos.estado', 'activo']])
+            ->get();
+
+        $periodos = Jornada::selectRaw('periodos.fecha_inicio,periodos.fecha_fin ')
+            ->join('empleado', 'empleado.id', '=', 'jornada.id_emp')
+            ->join('periodos', 'periodos.id', '=', 'jornada.id_periodo')
+            ->where([['empleado.dui', $request->dui], ['periodos.estado', 'activo']])
+            ->get();
+
+
+        $query = "select * from reloj_datos where id_persona='" . $request->dui . "' and  to_char(fecha::date,'YYYY')::int=" . $request->asistencia_anio . "
+        and to_char(fecha::date,'MM')::int=" . $request->asistencia_mes . "";
 
         $query = trim($query);
         $reloj = DB::select($query);
-       
 
 
-        $pdf = PDF::loadView('Reportes.RelojAsistencia.AsistenciaMensual', compact('empleadito', 'request', 'reloj'));
-        return $pdf->setPaper('A4', 'Landscape')->download('Descuento Personal.pdf');
+
+        $pdf = PDF::loadView('Reportes.RelojAsistencia.AsistenciaMensual', compact('empleadito', 'request', 'reloj', 'jornada','periodos'));
+        return $pdf->setPaper('A4', 'Landscape')->download('Asistencia Personal.pdf');
     }
 
     //FIN DE GENERAR LA ASISTENCIA PARA LOS EMPLEADOS MENSUAL
@@ -1610,7 +1624,7 @@ class ReporteController extends Controller
     //FIN MOSTRAR EN LA TABLA DE LA VISTA DE LICENCIAS POR ACUERDO
 
     //PARA MOSTRAR EN LA TABLA DE LA VISTA DE REVISION MENSUALE A JEFES
-  
+
     //FIN DE MOSTRAR EN LA TABLA DE LA VISTA DE REVISION MENSUALE A JEFES
     public function mostrarTablaEmpleado($mes, $anio)
     {

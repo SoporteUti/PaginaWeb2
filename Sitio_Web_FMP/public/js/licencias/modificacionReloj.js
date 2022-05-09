@@ -1,6 +1,4 @@
 var table = null;    
-alert($('#mes_modificacion').val());
-alert($('#anio_modificacion').val());
 
 $("#anio_modificacion").change(function () {
 
