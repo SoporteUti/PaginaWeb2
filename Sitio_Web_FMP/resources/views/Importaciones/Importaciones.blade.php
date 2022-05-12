@@ -56,7 +56,7 @@
                                     <div class="alert alert-info bg-info text-white border-0" role="alert">
                                         <div class="row">
                                             <div class="col-lg-1 px-2">
-                                                <div class="spinner-border text-white m-2" role="status"></div>
+                                                <i class="fa fa-check  fa-3x"></i>
                                             </div>
                                             <div class="col-lg-11 align-self-center">
                                                 <h3 class="col-xl text-white">{{ session('status') }}</h3>
@@ -70,7 +70,7 @@
 
                                         <div class="row">
                                             <div class="col-lg-1 px-2">
-                                                <div class="spinner-border text-white m-2" role="status"></div>
+                                                <i class="fa fa-check  fa-3x"></i>
                                             </div>
                                             <div class="col-lg-11 align-self-center">
                                                 <h3 class="col-xl text-white">{{ session('status') }}</h3>
@@ -85,7 +85,7 @@
 
                                         <div class="row">
                                             <div class="col-lg-1 px-2">
-                                                <div class="spinner-border text-white m-2" role="status"></div>
+                                                <i class="fa fa-check  fa-3x"></i>
                                             </div>
                                             <div class="col-lg-11 align-self-center">
                                                 <!-- {{ print_r($errors->all()) }}-->
@@ -201,7 +201,7 @@
                 $(notificacion).removeClass().addClass('alert alert-danger bg-danger text-white border-0').html('' +
                     '<div class="row">' +
                     '    <div class="col-lg-1 px-2">' +
-                    '        <div class="spinner-border text-white m-2" role="status"></div>' +
+                    '        <i class="fa fa-check  fa-3x"></i>' +
                     '    </div>' +
                     '    <div class="col-lg-11 align-self-center" >' +
                     '      <h3 class="col-xl text-white">La Extensión del archivo debe de ser .xlsx</h3>' +
@@ -216,7 +216,7 @@
                 $(notificacion).removeClass().addClass('alert alert-success bg-success text-white border-0').html('' +
                     '<div class="row">' +
                     '    <div class="col-lg-1 px-2">' +
-                    '        <div class="spinner-border text-white m-2" role="status"></div>' +
+                    '       <i class="fa fa-check  fa-3x"></i>' +
                     '    </div>' +
                     '    <div class="col-lg-11 align-self-center" >' +
                     '      <h3 class="col-xl text-white">Archivo Correcto con extensión .xlsx</h3>' +

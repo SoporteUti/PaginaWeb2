@@ -64,7 +64,7 @@ class ImportacionesController extends Controller
 
 
 
-    $datos = $datos->get();
+    $datos = $datos ->groupByRaw('id,id_persona, nombre_personal,fecha,entrada,salida')->get();
 
 
 
