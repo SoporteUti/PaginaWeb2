@@ -405,9 +405,7 @@
                                     <li>
                                         <a href="{{ route('Asistencia/vista') }}">Asistencia Mensual</a>
                                     </li>
-                                    <li>
-                                        <a href="{{ route('descargarPDF') }}">Revisión mensual</a>
-                                    </li>
+                                   
                                     
 
                                     

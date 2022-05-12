@@ -138,7 +138,7 @@ class ReporteController extends Controller
         and ji.dia=r.dia_semana and ji.hora_inicio::time+'00:05:59' < r.entrada::time
         and  to_char(r.fecha::date,'YYYY')::int=" . $request->anio . "
         and to_char(r.fecha::date,'MM')::int=" . $request->mes . " and r.entrada !='-'
-        GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin,r.gracia order by r.fecha) des 
+        GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin,r.gracia order by e.nombre, r.fecha) des 
         GROUP BY des.nombre,des.salario,des.jornada";
 
         $query = trim($query);
@@ -470,7 +470,7 @@ class ReporteController extends Controller
             and  to_char(r.fecha::date,'YYYY')::int=" . $request->anio . "
             and to_char(r.fecha::date,'MM')::int=" . $request->mes . "
             GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin
-            order by r.fecha asc) pivot GROUP by pivot.em,pivot.ap,pivot.salario";
+            order by e.nombre,r.fecha) pivot GROUP by pivot.em,pivot.ap,pivot.salario";
 
         $query_inasistencia = trim($query_inasistencia);
 
@@ -541,6 +541,7 @@ class ReporteController extends Controller
         and to_char(permisos.fecha_uso,'YYYY')::int=" . $request->anio . "
         and to_char(permisos.fecha_uso,'MM')::int=" . $request->mes . "
         GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin,permisos.hora_inicio,permisos.hora_final
+        order by e.nombre,r.fecha
         )gs GROUP BY gs.ap, gs.nombre,gs.fecha,gs.salario
         ";
         $licencia_sinGoce = trim($licencia_sinGoce);
@@ -1245,7 +1246,7 @@ class ReporteController extends Controller
         and ji.dia=r.dia_semana 
         and  to_char(r.fecha::date,'YYYY')::int=" . $request->des_anio . "
         and to_char(r.fecha::date,'MM')::int=" . $request->des_mes . "
-        GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin";
+        GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin order by r.fecha";
 
         $query_inasistencia_per = trim($query_inasistencia_per);
 
@@ -1310,7 +1311,7 @@ class ReporteController extends Controller
         and permisos.tipo_permiso='LS/GS' and permisos.estado='Aceptado'
         and  to_char(r.fecha::date,'YYYY')::int=" . $request->des_anio . "
         and to_char(r.fecha::date,'MM')::int=" . $request->des_mes . "
-        GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin,permisos.hora_inicio,permisos.hora_final";
+        GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin,permisos.hora_inicio,permisos.hora_final order by r.fecha";
 
         $query_licencia_sin_gose = trim($query_licencia_sin_gose);
 
@@ -1349,14 +1350,14 @@ class ReporteController extends Controller
 
 
         $query = "select * from reloj_datos where id_persona='" . $request->dui . "' and  to_char(fecha::date,'YYYY')::int=" . $request->asistencia_anio . "
-        and to_char(fecha::date,'MM')::int=" . $request->asistencia_mes . "";
+        and to_char(fecha::date,'MM')::int=" . $request->asistencia_mes . " order by fecha";
 
         $query = trim($query);
         $reloj = DB::select($query);
 
 
 
-        $pdf = PDF::loadView('Reportes.RelojAsistencia.AsistenciaMensual', compact('empleadito', 'request', 'reloj', 'jornada','periodos'));
+        $pdf = PDF::loadView('Reportes.RelojAsistencia.AsistenciaMensual', compact('empleadito', 'request', 'reloj', 'jornada', 'periodos'));
         return $pdf->setPaper('A4', 'Landscape')->download('Asistencia Personal.pdf');
     }
 
@@ -1622,6 +1623,55 @@ class ReporteController extends Controller
         return isset($data) ? response()->json($data, 200, []) : response()->json([], 200, []);
     }
     //FIN MOSTRAR EN LA TABLA DE LA VISTA DE LICENCIAS POR ACUERDO
+
+    //PARA MOSTRAR EN LA TABLA DE LA VISTA DE REVISION MENSUALE A JEFES
+    public function mostrarTablaJefes($mes, $anio)
+    {
+
+        $permisos = Permiso::selectRaw('tipo_permiso, fecha_uso,fecha_presentacion,hora_inicio,hora_final,justificacion,permisos.estado,
+                  observaciones,olvido,empleado.nombre,empleado.apellido')
+            ->join('empleado', 'empleado.id', '=', 'permisos.empleado')
+            ->where(
+                function ($query) {
+                    $query->where([
+                        ['permisos.estado', 'like', 'Aceptado'],
+                        ['permisos.jefatura', '=', auth()->user()->empleado]
+                    ]);
+                }
+            );
+
+
+        if ($anio != 'todos') {
+            $permisos = $permisos->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio);
+        }
+
+        if ($mes != 'todos') {
+            $permisos = $permisos->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $mes);
+        }
+
+        $permisos = $permisos->get();
+
+        foreach ($permisos as $item) {
+            # code...
+            $col3 = null;
+            if ($item->olvido == 'Entrada' || $item->olvido == 'Salida') {
+                $col3 = $item->olvido;
+            } else {
+                $col3 = '' . \Carbon\Carbon::parse($item->fecha_uso . 'T' . $item->hora_inicio)->diffAsCarbonInterval(\Carbon\Carbon::parse($item->fecha_uso . 'T' . $item->hora_final));
+            }
+
+
+
+            $data[] = array(
+                "col0" => $item->nombre . ' ' . $item->apellido,
+                "col1" => '<span class="badge badge-primary">' . $item->tipo_permiso . '</span>',
+                "col2" => \Carbon\Carbon::parse($item->fecha_uso)->format('d/M/Y'),
+                "col3" => $col3,
+            );
+        }
+        return isset($data) ? response()->json($data, 200, []) : response()->json([], 200, []);
+    }
+    //FIN DE MOSTRAR EN LA TABLA DE LA VISTA DE REVISION MENSUALE A JEFES
 
     //PARA MOSTRAR EN LA TABLA DE LA VISTA DE REVISION MENSUALE A JEFES
 
