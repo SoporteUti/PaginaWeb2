@@ -3,7 +3,7 @@ var table=null;
 $("#deptoR").change(function () {
   // alert($('#inicio').val());
    // alert($('#fin').val());
-    if ($('#inicio').val() == '' ||  $('#fin').val()=='') {
+    if ($('#lic_anio').val() == '' ||  $('#lic_mes').val()=='') {
         $("#modalAlerta").modal();
     } else {
 
@@ -41,7 +41,7 @@ $("#deptoR").change(function () {
             "autoWidth": true,
             "deferRender": true,
             "ajax": {
-                "url": URL_SERVIDOR+"/admin/Licencias/Reporte/" + $('#inicio').val() + "/" + $('#fin').val() + "/" + $('#deptoR').val(),
+                "url": URL_SERVIDOR+"/admin/Licencias/Reporte/" + $('#lic_mes').val() + "/" + $('#lic_anio').val() + "/" + $('#deptoR').val(),
                 "method": "GET",
                 "dataSrc": function (json) {
                    
@@ -67,14 +67,23 @@ $("#deptoR").change(function () {
 
 //FIN PARA CARGAR LOS DATOS EN LA TABLA DINAMICAMENTE
 
+//REFRESCAR LA TABLA
+function refrescarTable(){
+    table.ajax.url(URL_SERVIDOR+"/admin/Licencias/Reporte/" + $('#lic_mes').val() + "/" + $('#lic_anio').val() + "/" + $('#deptoR').val()).load();
+}
+
+$('#lic_mes').on('select2:select',refrescarTable);
+$('#lic_anio').on('select2:select',refrescarTable);
+//FIN DE REFRESCAR LA TABLA
+
 //BOTON PARA GENERAR EL REPORTE
 $( "#descargarLicencias" ).click(function() {
 
-    if ($('#inicio').val() == '' || $('#fin').val()=='') {
+    if ($('#lic_mes').val() == '' || $('#lic_anio').val()=='') {
         $("#modalAlerta").modal();
     } else {
-        $('#inicioR').val($('#inicio').val());
-        $('#finR').val($('#fin').val());
+        $('#inicioR').val($('#lic_mes').val());
+        $('#finR').val($('#lic_anio').val());
         $('#deptoR_R').val($('#deptoR').val());
         $("#modalPDF").modal();
     }//fin else de mostrar advertencia

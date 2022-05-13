@@ -1395,8 +1395,9 @@ class ReporteController extends Controller
     public function indexBladeLicencias()
     {
         $deptos = Departamento::all();
+        $años = Permiso::selectRaw('distinct to_char(permisos.fecha_uso, \'YYYY\') as año')->get();
         // echo dd($deptos);
-        return view('Reportes.LicenciasReportes.MostrarLicencias', compact('deptos'));
+        return view('Reportes.LicenciasReportes.MostrarLicencias', compact('deptos','años'));
     }
     //FIN DE MOSTRAR LA VISTA EN LICENCIAS
 
@@ -1485,7 +1486,7 @@ class ReporteController extends Controller
     //FIN DE MOSTRAR EN LA TABLA CONSTANCIA DE OLVIDO DE MARCAJE
 
     //PARA DIBUJAR LAS LA TABLA PARA LAS LICENCIAS
-    public function mostrarTablaLicencias($fecha1, $fecha2, $dep)
+    public function mostrarTablaLicencias($mes, $anio, $dep)
     {
 
         $permisoss = Empleado::selectRaw(' permisos.id, nombre, apellido, permisos.tipo_permiso,permisos.fecha_presentacion,permisos.fecha_uso,
@@ -1505,11 +1506,11 @@ class ReporteController extends Controller
                 }
             )->where(
                 [
-                    ['permisos.estado', '=', 'Aceptado'],
-                    ['permisos.fecha_uso', '>=', $fecha1],
-                    ['permisos.fecha_uso', '<=', $fecha2]
+                    ['permisos.estado', '=', 'Aceptado']
                 ]
-            )->get();
+            )->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio)
+            ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $mes)->get();
+            //->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio);
         } else {
             $permisos = $permisoss->Where(
                 function ($query) {
@@ -1523,11 +1524,10 @@ class ReporteController extends Controller
             )->where(
                 [
                     ['permisos.estado', '=', 'Aceptado'],
-                    ['permisos.fecha_uso', '>=', $fecha1],
-                    ['permisos.fecha_uso', '<=', $fecha2],
                     ['departamentos.id', '=', $dep]
                 ]
-            )->get();
+            )->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio)
+            ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $mes)->get();
         }
         // echo dd($permisos);
 
@@ -1802,11 +1802,10 @@ class ReporteController extends Controller
                 }
             )->where(
                 [
-                    ['permisos.estado', '=', 'Aceptado'],
-                    ['permisos.fecha_uso', '>=', $request->inicioR],
-                    ['permisos.fecha_uso', '<=', $request->finR]
+                    ['permisos.estado', '=', 'Aceptado']
                 ]
-            )->get();
+            )->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $request->inicioR)
+            ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $request->finR)->get();
             //para mostrar solo los departamentos que tienen permisos
             $departamentos = Empleado::selectRaw(' DISTINCT id_depto,departamentos.nombre_departamento,departamentos.id')
                 ->join('departamentos', 'departamentos.id', '=', 'empleado.id_depto')
@@ -1822,11 +1821,11 @@ class ReporteController extends Controller
                     }
                 )->where(
                     [
-                        ['permisos.estado', '=', 'Aceptado'],
-                        ['permisos.fecha_uso', '>=', $request->inicioR],
-                        ['permisos.fecha_uso', '<=', $request->finR]
+                        ['permisos.estado', '=', 'Aceptado']
+                       
                     ]
-                )->get();
+                )->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $request->finR)
+                ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $request->inicioR)->get();
             //para imprimir el reporte
 
         } else {
@@ -1842,11 +1841,10 @@ class ReporteController extends Controller
             )->where(
                 [
                     ['permisos.estado', '=', 'Aceptado'],
-                    ['permisos.fecha_uso', '>=', $request->inicioR],
-                    ['permisos.fecha_uso', '<=', $request->finR],
                     ['departamentos.id', '=', $request->deptoR_R]
                 ]
-            )->get();
+            )->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $request->finR)
+            ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $request->inicioR)->get();
 
             $departamentos = Departamento::where('id', '=', $request->deptoR_R)->get();
         }

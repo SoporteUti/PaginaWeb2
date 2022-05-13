@@ -136,21 +136,34 @@
                     </div>  --}}
                     <div class="col-12 col-sm-3 col-md-3">
                         <div class="form-group">
-                            <label for="justificacion">Fecha de inicio</label>
+                            <label for="justificacion">Mes</label>
                             <div class="input-group-append" style="width: 100%;">
-                                <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
-                                <input type="date" name="inicio" class="form-control"
-                                    style="width: 100%;"  id="inicio" >
+                                <select id="lic_mes" name="lic_mes" class="form-control select2 asisMen" style="width: 100%" required>
+                                   <option value="1">Enero</option>
+                                   <option value="2">Febrero</option>
+                                   <option value="3">Marzo</option>
+                                   <option value="4">Abril</option>
+                                   <option value="5">Mayo</option>
+                                   <option value="6">Junio</option>
+                                   <option value="7">Julio</option>
+                                   <option value="8">Agosto</option>
+                                   <option value="9">Septiembre</option>
+                                   <option value="10">Octubre</option>
+                                   <option value="11">Noviembre</option>
+                                   <option value="12">Diciembre</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-sm-3 col-md-3">
                         <div class="form-group">
-                            <label for="justificacion">Fecha de fin</label>
+                            <label for="justificacion">Año</label>
                             <div class="input-group-append" style="width: 100%;">
-                                <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
-                                <input type="date" name="fin" class="form-control"
-                                    style="width: 100%;"  id="fin" >
+                                <select id="lic_anio" name="lic_anio" class="form-control select2 asisMen" style="width: 100%" required>
+                                    @foreach ($años as $item)
+                                        <option value="{{$item->año}}">{{$item->año}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>

@@ -45,9 +45,32 @@
             Universidad de El Salvador<br>
             Facultad Multidisciplinaria Paracentral <br>
             Licencias del Departamento: {{ $dep->nombre_departamento }}{{ ' ' }}<br>
-            Periodo de:
-            {{ Carbon\Carbon::parse($request->inicioR)->format('d/M/Y') }}{{ ' al ' }}{{ Carbon\Carbon::parse($request->finR)->format('d/M/Y') }}
-            <br>
+            Mes: @if ($request->inicioR == '1')
+                Enero
+            @elseif($request->inicioR == '2')
+                Febrero
+            @elseif($request->inicioR == '3')
+                Marzo
+            @elseif($request->inicioR == '4')
+                Abril
+            @elseif($request->inicioR == '5')
+                Mayo
+            @elseif($request->inicioR == '6')
+                Junio
+            @elseif($request->inicioR == '7')
+                Julio
+            @elseif($request->inicioR == '8')
+                Agosto
+            @elseif($request->inicioR == '9')
+                Septiembre
+            @elseif($request->inicioR == '10')
+                Octubre
+            @elseif($request->inicioR == '11')
+                Noviembre
+            @elseif($request->inicioR == '12')
+                Diciembre
+            @endif
+            del {{ $request->finR }}<br>
 
         </h4>
 
@@ -89,7 +112,7 @@
             </tbody>
 
         </table>
-        <div class="page-break"></div> 
+       
     @endforeach
     
     {{-- PARA EL PAGINADO DE PAGINAS --}}
