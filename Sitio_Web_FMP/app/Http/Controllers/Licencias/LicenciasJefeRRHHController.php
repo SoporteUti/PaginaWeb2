@@ -42,11 +42,11 @@ class LicenciasJefeRRHHController extends Controller
             ->where('jefatura',auth()->user()->empleado)
             ->where(
                 function($query){
-                    $query->where('permisos.estado','like','Aceptado')
+                    $query->where('permisos.estado','!=','Aceptado')
                     ->orWhere('permisos.estado','like','Enviado a Jefatura')
                     ->orWhere('permisos.estado','like','Enviado a RRHH');
             })->get();
-            //echo dd($permisos);
+           // echo dd($permisos);
             return view('Licencias.LicenciaJefe', compact('permisos'));
         }else {
             return redirect()->route('index');

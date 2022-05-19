@@ -507,6 +507,7 @@
                                 <th class="col-sm-1">Hora Inicio</th>
                                 <th class="col-sm-1">Hora final</th>
                                 <th class="col-sm-2">Horas</th>
+                                <th class="col-sm-2">Estado</th>
                                 <th class="col-sm-1 text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -524,6 +525,17 @@
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_inicio)) }}</td>
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_final)) }}</td>
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_final)) }}</td>
+
+                                        @if($item->estado =='Aceptado')
+                                        <td class="align-middle "><span
+                                            class="badge badge-success">{{ $item->estado }}</span></td>
+
+                                        @else
+                                        <td class="align-middle "><span
+                                            class="badge badge-secondary">{{ $item->estado }}</span></td>
+                                        
+                                        @endif
+
                                          <!--PARA LOS BOTONES-->
                                          <td class="align-middle ">
                                             <div class="row">
@@ -558,6 +570,16 @@
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_final)) }}</td>
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_inicio)) }}</td>
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_final)) }}</td>
+                                        @if($item->estado =='Aceptado')
+                                        <td class="align-middle "><span
+                                            class="badge badge-success">{{ $item->estado }}</span></td>
+
+                                        @else
+                                        <td class="align-middle "><span
+                                            class="badge badge-secondary">{{ $item->estado }}</span></td>
+                                        
+                                        @endif
+
                                         <!--PARA LOS BOTONES-->
                                         <td class="align-middle ">
                                             <div class="row">
@@ -595,6 +617,15 @@
                                         <td class="align-middle ">
                                             {{Carbon\Carbon::parse($item->fecha_uso . 'T' . $item->hora_inicio)->diffAsCarbonInterval(Carbon\Carbon::parse($item->fecha_uso . 'T' . $item->hora_final)) }}
                                         </td>
+                                        @if($item->estado == 'Aceptado')
+                                        <td class="align-middle "><span
+                                            class="badge badge-success">{{ $item->estado }}</span></td>
+
+                                        @else
+                                        <td class="align-middle "><span
+                                            class="badge badge-secondary">{{ $item->estado }}</span></td>
+                                        
+                                        @endif
                                         <td class="align-middle ">
                                             <div class="row">
                                                 <div class="col text-center">
