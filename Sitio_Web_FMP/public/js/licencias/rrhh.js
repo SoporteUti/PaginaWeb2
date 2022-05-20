@@ -46,7 +46,8 @@ table = $('#misLicenciasRRHHTable').DataTable({
         { className: "align-middle", data: "col3" },
         { className: "align-middle", data: "col4" },
         { className: "align-middle", data: "col5" },
-        { className: "align-middle text-center", data: "col6" }
+        { className: "align-middle", data: "col6" },
+        { className: "align-middle text-center", data: "col7" }
     ]               
 });  
 function refrescarTable(){

@@ -95,7 +95,7 @@ class LicenciasJefeRRHHController extends Controller
             $permisos = $permisos->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int='.$mes);
         }
 
-        $permisos = $permisos->get();
+        $permisos = $permisos->orderBy('permisos.fecha_uso')->get();
 
         foreach ($permisos as $item) {
             # code...
@@ -141,7 +141,8 @@ class LicenciasJefeRRHHController extends Controller
                 "col3" => $col3,
                 "col4" => $col4,
                 "col5" => $col5,
-                "col6" => $botones,
+                "col6" => ($item->estado=='Aceptado'?'<span class="badge badge-success">'.$item->estado.'</span>':'<span class="badge badge-secondary">'.$item->estado.'</span>'),
+                "col7" => $botones,
             );
         }
         return isset($data)?response()->json($data,200,[]):response()->json([],200,[]);

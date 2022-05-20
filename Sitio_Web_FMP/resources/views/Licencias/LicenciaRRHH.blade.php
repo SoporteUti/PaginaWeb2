@@ -641,6 +641,7 @@ aria-labelledby="myCenterModalLabel" aria-hidden="true" style="display: none;">
                     <th class="col-sm-1">Hora Inicio</th>
                     <th class="col-sm-1">Hora final</th>
                     <th class="col-sm-2">Horas</th>
+                    <th class="col-sm-2">Estado</th>
                     <th class="col-sm-1 text-center">Acciones</th>
                 </tr>
                 </thead>
