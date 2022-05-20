@@ -72,17 +72,22 @@ class LicenciasJefeRRHHController extends Controller
         }
     }
 
-    public function datableRRHHJson($depto, $mes, $anio){
+    public function datableRRHHJson($depto, $mes, $anio,$estado){
 
         $permisos = Permiso::selectRaw('md5(permisos.id::text) as permiso, 
                 tipo_permiso, fecha_uso,fecha_presentacion,hora_inicio,hora_final,justificacion,permisos.estado,
                 observaciones,olvido,empleado.nombre,empleado.apellido')
-        ->join('empleado','empleado.id','=','permisos.empleado')
-        ->where(function($query)
+        ->join('empleado','empleado.id','=','permisos.empleado');
+
+        if($estado != 'todos'){
+            $permisos = $permisos->where('permisos.estado',$estado);
+        }else{
+            $permisos = $permisos->where(function($query)
             {$query->where('permisos.estado','like','Enviado a RRHH')
                 ->orWhere('permisos.estado','like','Aceptado');}
         );
 
+        }
         if($depto!='todos'){
             $permisos = $permisos->where('empleado.id_depto',$depto);
         }
@@ -93,6 +98,9 @@ class LicenciasJefeRRHHController extends Controller
 
         if($mes!='todos'){
             $permisos = $permisos->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int='.$mes);
+        }
+        if($estado !='todos'){
+           
         }
 
         $permisos = $permisos->orderBy('permisos.fecha_uso')->get();
@@ -141,7 +149,7 @@ class LicenciasJefeRRHHController extends Controller
                 "col3" => $col3,
                 "col4" => $col4,
                 "col5" => $col5,
-                "col6" => ($item->estado=='Aceptado'?'<span class="badge badge-success">'.$item->estado.'</span>':'<span class="badge badge-secondary">'.$item->estado.'</span>'),
+                "col6" => ($item->estado=='Aceptado'?'<span class="badge badge-success">'.$item->estado.'</span>':'<span class="badge badge-danger">Pendiente de Aceptación</span>'),
                 "col7" => $botones,
             );
         }

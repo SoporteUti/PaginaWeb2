@@ -32,7 +32,7 @@ table = $('#misLicenciasRRHHTable').DataTable({
     "autoWidth": true,                
     "deferRender": true,
     "ajax":{
-        "url": URL_SERVIDOR+"/admin/licencias/RRHH/datableJson/"+$('#rrhh_depto').val()+'/'+$('#rrhh_mes').val()+'/'+$('#rrhh_anio').val(),
+        "url": URL_SERVIDOR+"/admin/licencias/RRHH/datableJson/"+$('#rrhh_depto').val()+'/'+$('#rrhh_mes').val()+'/'+$('#rrhh_anio').val()+'/'+$('#filtrar').val(),
         //"url":"/admin/licencias/RRHH/datableJson/tipo/depto/anio/mes",
         "method": "GET",
         "dataSrc": function (json) {
@@ -51,12 +51,14 @@ table = $('#misLicenciasRRHHTable').DataTable({
     ]               
 });  
 function refrescarTable(){
-    table.ajax.url(URL_SERVIDOR+"/admin/licencias/RRHH/datableJson/"+$('#rrhh_depto').val()+'/'+$('#rrhh_mes').val()+'/'+$('#rrhh_anio').val()).load();
+    table.ajax.url(URL_SERVIDOR+"/admin/licencias/RRHH/datableJson/"+$('#rrhh_depto').val()+'/'+$('#rrhh_mes').val()+'/'+$('#rrhh_anio').val()+'/'+$('#filtrar').val()).load();
 }
 
 $('#rrhh_depto').on('select2:select',refrescarTable);
 $('#rrhh_mes').on('select2:select',refrescarTable);
 $('#rrhh_anio').on('select2:select',refrescarTable);
+$('#filtrar').on('select2:select',refrescarTable);
+
 
 $( function () {
         $('.select2').select2();            

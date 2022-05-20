@@ -586,7 +586,7 @@ aria-labelledby="myCenterModalLabel" aria-hidden="true" style="display: none;">
                         Licencias Recursos Humanos
                     </h3>
                     <div class="row my-1">
-                        <div class="col-xl-4">
+                        <div class="col-xl-3">
                             <label for="depto">Departamento</label>
                             <select id="rrhh_depto" class="form-control select2" style="width: 100%" required>
                                 <option value="todos">Todos</option>
@@ -595,7 +595,7 @@ aria-labelledby="myCenterModalLabel" aria-hidden="true" style="display: none;">
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-xl-4">
+                        <div class="col-xl-3">
                             <label for="mes">Mes</label>
                             <select id="rrhh_mes" class="form-control select2" style="width: 100%" required>
                                 <option value="todos">Todos</option>
@@ -613,7 +613,7 @@ aria-labelledby="myCenterModalLabel" aria-hidden="true" style="display: none;">
                                <option value="12">Diciembre</option>
                             </select>
                         </div>
-                        <div class="col-xl-4">
+                        <div class="col-xl-3">
                             <label for="anio">Año</label>
                             <select id="rrhh_anio" class="form-control select2" style="width: 100%" required>
                                 <option value="todos">Todos</option>
@@ -621,7 +621,20 @@ aria-labelledby="myCenterModalLabel" aria-hidden="true" style="display: none;">
                                     <option value="{{$item->año}}">{{$item->año}}</option>
                                 @endforeach
                             </select>
-                        </div>                        
+                        </div>
+
+                        <div class="col-xl-3">
+                            <label for="filtrar">Filtrar</label>
+                            <select id="filtrar" class="form-control select2" style="width: 100%" required>
+                                <option value="todos">Todos</option>
+                                <option value="Aceptado">Aceptado</option>
+                                <option value="Enviado a RRHH">Pendiente</option>
+
+
+                                
+                            </select>
+                        </div>    
+
                     </div>                    
                 </div>
                 <div class="col-lg-2 text-right order-last">

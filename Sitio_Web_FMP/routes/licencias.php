@@ -78,7 +78,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('admin/licencias/jefatura',[LicenciasJefeRRHHController::class,'indexJefe'])->name('indexJefatura');
     Route::get('admin/licencias/RRHH',[LicenciasJefeRRHHController::class,'indexRRHH'])->name('indexRRHH');
-    Route::get('admin/licencias/RRHH/datableJson/{depto}/{mes}/{anio}',[LicenciasJefeRRHHController::class,'datableRRHHJson']);
+    Route::get('admin/licencias/RRHH/datableJson/{depto}/{mes}/{anio}/{estado}',[LicenciasJefeRRHHController::class,'datableRRHHJson']);
     Route::get('admin/licencias/RRHH/datableJson/{tipo}/{departamento}/{anio}/{mes}',[LicenciasJefeRRHHController::class,'datableJson']);
 
     Route::get('admin/licencias/jefaturaRRHH/{permiso}',[LicenciasJefeRRHHController::class,'permiso']);

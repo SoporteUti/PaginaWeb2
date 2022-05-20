@@ -532,7 +532,7 @@
 
                                         @else
                                         <td class="align-middle "><span
-                                            class="badge badge-secondary">{{ $item->estado }}</span></td>
+                                            class="badge badge-danger">Pendiente de Aceptación</span></td>
                                         
                                         @endif
 
@@ -576,7 +576,7 @@
 
                                         @else
                                         <td class="align-middle "><span
-                                            class="badge badge-secondary">{{ $item->estado }}</span></td>
+                                            class="badge badge-danger">Pendiente de Aceptación</span></td>
                                         
                                         @endif
 
@@ -623,7 +623,7 @@
 
                                         @else
                                         <td class="align-middle "><span
-                                            class="badge badge-secondary">{{ $item->estado }}</span></td>
+                                            class="badge badge-danger">Pendiente de Aceptación</span></td>
                                         
                                         @endif
                                         <td class="align-middle ">
