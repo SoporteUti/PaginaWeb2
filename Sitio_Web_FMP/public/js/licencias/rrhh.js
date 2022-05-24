@@ -196,7 +196,7 @@ function verDatos(boton) {
                 $('#observaciones').summernote("code",json.observaciones);
                 $('#tipo_representante').val(json.tipo_representante).trigger("change");
                 $('#tipo_permiso').val(json.tipo_permiso).trigger("change");
-                $('#fecha_de_presentacion').val(json.fecha_presentacion);
+                $('#fecha_de_presentacion').val(json.fecha_presentacion).change();
                 $('#fecha_de_uso').val(json.fecha_uso).change();                                   
                 $('#hora_inicio').val(json.hora_inicio);
                 $('#hora_final').val(json.hora_final);

@@ -419,6 +419,10 @@
                                     <a href="{{ route('historial/vista') }}">Resumen de permisos</a>
                                 </li>
 
+                                <li>
+                                    <a href="{{ route('blade/asistenciaEmpleado') }}">Asistencia Personal</a>
+                                </li>
+                                
                             </ul>
                         </li>
                         <!--fin de para los horarios-->

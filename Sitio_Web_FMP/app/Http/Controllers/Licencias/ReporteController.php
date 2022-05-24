@@ -1326,6 +1326,111 @@ class ReporteController extends Controller
 
     //FIN DE GENERAR ASISTENCIA MENUAL PARA EMPLEADOS
 
+    //***PARA MOSTRAR EN EL BLADE DE ASISTENCIA POR EMPLEADO */
+    public function bladeAsistenciaEmpleado(){
+        $años = Reloj_dato::selectRaw('distinct to_char(reloj_datos.fecha::date, \'YYYY\') as año')->get();
+        $mes = Reloj_dato::selectRaw('distinct to_char(reloj_datos.fecha::date, \'MM\') as mes')->get();
+        
+        return view('Reportes.AsistenciaEmpleado.AsistenciaEmpleadoTabla', compact('mes', 'años'));
+    }
+
+    //***FIN DE PARA MOSTRAR EN LE BLADE DE ASISTENCIA POR EMPLEADO */
+
+    //***********************PARA GENERAR LA ASISTENCIA POR EMPLEADO */
+    public function AsistenciaPersonalEmpleadoPDF(Request $request)
+    {
+
+        /* $permisos = Permiso::selectRaw('tipo_permiso, fecha_uso,fecha_presentacion,hora_inicio,hora_final,justificacion,permisos.estado,
+                observaciones,olvido,empleado.nombre,empleado.apellido')
+            ->join('empleado', 'empleado.id', '=', 'permisos.empleado')
+            ->where(
+                function ($query) {
+                    $query->where([
+                        ['permisos.estado', 'like', 'Aceptado'],
+                        ['permisos.empleado', '=', auth()->user()->empleado]
+                    ]);
+                }
+            ); */
+        $empleadito = Empleado::selectRaw('nombre, apellido,departamentos.nombre_departamento')
+            ->join('departamentos', 'departamentos.id', '=', 'empleado.id_depto')
+            ->where('empleado.dui', $request->dui)
+            ->get();
+
+        $jornada = Jornada::selectRaw('jornada_items.dia, jornada_items.hora_inicio,jornada_items.hora_fin')
+            ->join('empleado', 'empleado.id', '=', 'jornada.id_emp')
+            ->join('periodos', 'periodos.id', '=', 'jornada.id_periodo')
+            ->join('jornada_items', 'jornada_items.id_jornada', '=', 'jornada.id')
+            ->where([['empleado.dui', $request->dui], ['periodos.estado', 'activo']])
+            ->get();
+
+        $periodos = Jornada::selectRaw('periodos.fecha_inicio,periodos.fecha_fin ')
+            ->join('empleado', 'empleado.id', '=', 'jornada.id_emp')
+            ->join('periodos', 'periodos.id', '=', 'jornada.id_periodo')
+            ->where([['empleado.dui', $request->dui], ['periodos.estado', 'activo']])
+            ->get();
+
+
+        $query = "select * from reloj_datos where id_persona='" . $request->dui . "' and  to_char(fecha::date,'YYYY')::int=" . $request->asistencia_anio . "
+        and to_char(fecha::date,'MM')::int=" . $request->asistencia_mes . " order by fecha";
+
+        $query = trim($query);
+        $reloj = DB::select($query);
+
+
+
+        $pdf = PDF::loadView('Reportes.RelojAsistencia.AsistenciaMensual', compact('empleadito', 'request', 'reloj', 'jornada', 'periodos'));
+        return $pdf->setPaper('A4', 'Landscape')->download('Asistencia Personal.pdf');
+    }
+    //******************FIN DE GENERAR LA ASISTENCIA POR EMPLEADO** */
+
+    //***PARA MOSTRAR EN LA TABLA DE ASISTENCIA MENSUAL EMPLEADO "EMPLEADITO LOGUEADO"*/
+    public function mostrarTablaAsistencia($mes, $anio)
+    {
+
+       if($anio == 'todos'){
+        $datos = Reloj_dato::selectRaw('*')
+        ->join('empleado', 'empleado.dui', '=', 'reloj_datos.id_persona')
+        ->where(
+            [
+                ['empleado.id', '=',  auth()->user()->empleado]
+            ]
+        )->get();
+
+        
+        }else{
+
+            $datos = Reloj_dato::selectRaw('*')
+            ->join('empleado', 'empleado.dui', '=', 'reloj_datos.id_persona')
+            ->where(
+                [
+                    ['empleado.id', '=',  auth()->user()->empleado]
+                ]
+            ) ->whereRaw('to_char(reloj_datos.fecha::date,\'MM\')::int=' . $mes)
+            ->whereRaw('to_char(reloj_datos.fecha::date,\'YYYY\')::int=' . $anio)
+           ->get();
+            
+        }
+        
+            //->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio);
+        
+        //echo dd($datos);
+
+        foreach ($datos as $item) {
+            # code...
+
+            $data[] = array(
+                "row0" => Carbon::parse($item->fecha)->format('d/m/Y'),
+                "row1" => $item->dia_semana,
+                "row2" => $item->entrada,
+                "row3" => $item->salida,
+            );
+        }
+
+        return isset($data) ? response()->json($data, 200, []) : response()->json([], 200, []);
+    }
+    
+    //***************/FIN DE MOSTRAR EN LA TABLA DE ASISTENCIA MENSUAL EMPLEADO */
+
     public function AsistenciaPersonalPDF(Request $request)
     {
 

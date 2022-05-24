@@ -353,7 +353,7 @@ aria-labelledby="myCenterModalLabel" aria-hidden="true" style="display: none;">
                             <div class="input-group">
                                 <div class="input-group-append" style="width: 100%;">
                                     <span class="input-group-text"><i class="mdi mdi-calendar"></i></span>
-                                    <input type="text" name="fecha_de_presentación" class="form-control"  readonly 
+                                    <input type="date" name="fecha_de_presentación" class="form-control"  readonly 
                                         style="width: 100%;"  id="fecha_de_presentacion" >
                                 </div>
                             </div>                           

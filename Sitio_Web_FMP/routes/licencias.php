@@ -55,8 +55,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('admin/ReporteMensual/Asistencia',[ReporteController::class,'indexAsistencia'])->name('Asistencia/vista');
     Route::get('admin/ReporteMensual/Asistencia/datableJson/{depto}',[ReporteController::class,'datableAsistenciaJson']);//para la tabla
     Route::post('admin/ReporteMensual/Asistencia/PDF',[ReporteController::class,'AsistenciaPDF'])->name('Reporte/Asistencia');
-
     Route::post('admin/ReporteMensual/Asistencia/M/PDF',[ReporteController::class,'AsistenciaPersonalPDF'])->name('Reporte/Asistencia/M');
+
+    //RUTAS PARA GENERAR LA ASISTENCIA PARA LOS EMPLEADOS
+    Route::get('admin/ReporteAsistencia/blade',[ReporteController::class,'bladeAsistenciaEmpleado'])->name('blade/asistenciaEmpleado');//para la tabla
+    Route::get('admin/ReporteAsistencia/{mes}/{anio}',[ReporteController::class,'mostrarTablaAsistencia']);//para la tabla
+
+    //FIN DE GENERAR LAS RUTA PARA LOS EMPLEADO
 
 
     Route::post('admin/ReporteMensual/Asistencia/DescuentoPersonal',[ReporteController::class,'DescuentoPersonalPDF'])->name('Descuento/Personal');
