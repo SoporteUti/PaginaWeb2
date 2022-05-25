@@ -63,7 +63,6 @@
                 <tr>
                     <th style="text-align: center;">N°</th>
                     <th style="text-align: center">Nombre</th>
-                    <th style="text-align: center">Salario</th>
                     <th style="text-align: center">Dias del mes</th>
                     <th style="text-align: center">Jornadas</th>
                     <th style="text-align: center">Minutos Simples</th>
@@ -84,7 +83,6 @@
                         <tr>
                             <td style="text-align: center;">{{$i}}</td>
                             <td style="text-align: center;">{{ $item->nombre}}</td>
-                            <td style="text-align: center;">{{ $item->salario }}</td>
                             <td style="text-align: center;">{{ $item->dias }}</td>
                             <td style="text-align: center;">{{ $item->jornada}}</td>
                             <td style="text-align: center;">{{ $item->minutossimples}}</td>
@@ -112,7 +110,6 @@
                 <tr>
                     <th style="text-align: center;">N°</th>
                     <th style="text-align: center">Nombre</th>
-                    <th style="text-align: center">Salario</th>
                     <th style="text-align: center">Dias del mes</th>
                     <th style="text-align: center">Jornadas</th>
                     <th style="text-align: center">Horas</th>
@@ -133,7 +130,6 @@
                         <tr>
                             <td style="text-align: center;">{{$i}}</td>
                             <td style="text-align: center;">{{ $ina->nombre}}</td>
-                            <td style="text-align: center;">{{ $ina->salario }}</td>
                             <td style="text-align: center;">{{ $ina->dia_mes }}</td>
                             <td style="text-align: center;">{{ $ina->jornadas}}</td>
                             <td style="text-align: center;">{{ $ina->hrs_inasis}}</td>
@@ -165,7 +161,6 @@
                 <th style="text-align: center">N°</th>
                 <th style="text-align: center">Dias del Mes</th>       
                 <th style="text-align: center">Jornada</th>
-                <th style="text-align: center">Salario</th>
                 <th style="text-align: center">Total Minutos</th>
                 <th style="text-align: center">Descuento($)</th>
 
@@ -190,7 +185,6 @@
                     <td style="text-align: center;">{{ $i }}</td>
                     <td style="text-align: center;">{{ $sg->fecha}}</td>
                     <td style="text-align: center;">{{ $sg->jornada }}</td>
-                    <td style="text-align: center;">{{'$'}}{{ $sg->salario }}</td>
                     <td style="text-align: center;">{{ $sg->total_minutos}}</td>
                     <td style="text-align: center;">{{'$'}}{{ $sg->descuento }}</td>
                 </tr>
