@@ -104,29 +104,36 @@
                             <span class="badge badge-{{ $color }}">{{ Str::ucfirst($item->procedimiento) }}</span>
                         </td>
                         <td class="text-center">
-                            <button data-key="{{ ($item->id) }}" data-toggle="modal" data-target="#modalView" class="btn btn-outline-success btn-sm" onclick="fnDetalleJornada(this);" title="Detalle"><i class="fa fa-info-circle fa-fw" aria-hidden="true"></i></button>
+                            <button data-key="{{ ($item->id) }}" data-toggle="modal" title="" data-target="#modalView" class="btn btn-outline-success btn-sm" onclick="fnDetalleJornada(this);" title="Detalle"><i class="fa fa-info-circle fa-fw" aria-hidden="true"></i></button>
 
-                            {{-- @if(!($item->procedimiento=='aceptado'))
+                            {{-- CODIGO QUE DESCOMENTARIE--}}
+                            {{--
+                                @if(!($item->procedimiento=='aceptado'))
                                 <button data-key="{{ ($item->id) }}" data-toggle="modal" data-target="#modalProcedimiento" class="btn btn-outline-info btn-sm" onclick="fnProcedimiento(this)" title="Seguimiento"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i></button>
                             @endif --}}
-{{--
+                            {{--CODIGO QUE DESCOMENTARIE--}}
+                        {{--CODIGO QUE DESCOMENARIE--}}
+                        
                             @if (($item->empleado_rf->id == Auth::user()->empleado_rf->id))
-                                @if($item->procedimiento=='guardado' || $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
+
+                             {{-- @if($item->procedimiento=='guardado' || $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
                                     <button data-key="{{ ($item->id) }}" data-toggle="modal" data-target="#modalProcedimiento" class="btn btn-outline-info btn-sm" onclick="fnProcedimiento(this)" title="Seguimiento"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i></button>
-                                @endif
+                                @endif--}}
+
+                            
                             @elseif (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano'))
+                               {{-- ACTIVA DOS BOTONES EN RECURSOS HUMANOS 
                                 @if($item->procedimiento=='enviado a recursos humanos')
                                     <button data-key="{{ ($item->id) }}" data-toggle="modal" data-target="#modalProcedimiento" class="btn btn-outline-info btn-sm" onclick="fnProcedimiento(this)" title="Seguimiento"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i></button>
-                                @endif
-                            @elseif(@Auth::user()->hasRole('Jefe-Academico') || @Auth::user()->hasRole('Jefe-Administrativo'))
+                                @endif--}}
+
+                           
+                                @elseif(@Auth::user()->hasRole('Jefe-Academico') || @Auth::user()->hasRole('Jefe-Administrativo'))
                                 @if($item->procedimiento=='enviado a jefatura' || $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
                                     <button data-key="{{ ($item->id) }}" data-toggle="modal" data-target="#modalProcedimiento" class="btn btn-outline-info btn-sm" onclick="fnProcedimiento(this)" title="Seguimiento"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i></button>
                                 @endif
-                            @elseif(@Auth::user()->hasRole('Docente'))
-                                @if($item->procedimiento=='guardado' || $item->procedimiento=='la jefatura lo ha regresado por problemas')
-                                    <button data-key="{{ ($item->id) }}" data-toggle="modal" data-target="#modalProcedimiento" class="btn btn-outline-info btn-sm" onclick="fnProcedimiento(this)" title="Seguimiento"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i></button>
-                                @endif
-                            @endif --}}
+                           
+                            @endif {{--FIN DE CODIGO QUE DESCOMENTARIE--}}
 
                             @php
                                 //para establecer que si la jornada se encuentra finalizada ya no es posible darle seguimiento
@@ -140,14 +147,18 @@
                             @if( (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano')) || ( (@Auth::user()->hasRole('Jefe-Academico') || @Auth::user()->hasRole('Jefe-Administrativo') || @Auth::user()->hasRole('Docente')) && strcmp($item->periodo_rf->estado, 'activo')==0) )
 
                                 @if (($item->empleado_rf->id == Auth::user()->empleado_rf->id))
+
                                     @if (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano') )
+
                                         @if($item->procedimiento=='guardado' || $item->procedimiento=='enviado a recursos humanos' || $item->procedimiento=='aceptado')
                                             {!! $buttons !!}
                                         @endif
+
                                     @elseif((@Auth::user()->hasRole('Docente') && @Auth::user()->hasRole('Jefe-Academico')))
                                         @if($item->procedimiento=='guardado' || $item->procedimiento=='la jefatura lo ha regresado por problemas' ||  $item->procedimiento == 'enviado a jefatura' || $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
                                             {!! $buttons !!}
                                         @endif
+                                        
                                     @elseif((@Auth::user()->hasRole('Docente') && @Auth::user()->hasRole('Jefe-Administrativo')))
                                         @if($item->procedimiento=='guardado' || $item->procedimiento=='la jefatura lo ha regresado por problemas' )
                                             {!! $buttons !!}
