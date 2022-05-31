@@ -185,7 +185,7 @@
                                 <span> Inicio </span>
                             </a>
                         </li>
-                        @hasrole('super-admin')
+                        @hasrole('super-admin|Recurso-Humano')
                             <li>
                                 <a href="{{ route('empleado') }}">
                                     <i class="font-18 dripicons-user "></i> <span> Empleados </span>

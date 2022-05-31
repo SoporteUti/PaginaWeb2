@@ -3,7 +3,7 @@
 use App\Http\Controllers\General\EmpleadoController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['role:super-admin','auth']], function () {
+Route::group(['middleware' => ['role:super-admin|Recurso-Humano','auth']], function () {
 
     /**Metodos Get */
     Route::get('admin/Empleado',[EmpleadoController::class, 'index'])->name('empleado');
