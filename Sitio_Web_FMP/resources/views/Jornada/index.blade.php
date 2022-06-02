@@ -114,7 +114,7 @@
                             {{--CODIGO QUE DESCOMENTARIE--}}
                         {{--CODIGO QUE DESCOMENARIE--}}
                         
-                            @if (($item->empleado_rf->id == Auth::user()->empleado_rf->id))
+                          {{--***  @if (($item->empleado_rf->id == Auth::user()->empleado_rf->id))
 
                              {{-- @if($item->procedimiento=='guardado' || $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
                                     <button data-key="{{ ($item->id) }}" data-toggle="modal" data-target="#modalProcedimiento" class="btn btn-outline-info btn-sm" onclick="fnProcedimiento(this)" title="Seguimiento"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i></button>
@@ -122,19 +122,19 @@
                                 
 
                             
-                            @elseif (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano'))
+                           {{--* @elseif (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano'))
                                {{-- ACTIVA DOS BOTONES EN RECURSOS HUMANOS 
                                 @if($item->procedimiento=='enviado a recursos humanos')
                                     <button data-key="{{ ($item->id) }}" data-toggle="modal" data-target="#modalProcedimiento" class="btn btn-outline-info btn-sm" onclick="fnProcedimiento(this)" title="Seguimiento"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i></button>
                                 @endif--}}
 
                            
-                                @elseif(@Auth::user()->hasRole('Jefe-Academico') || @Auth::user()->hasRole('Jefe-Administrativo'))
+                               {{-- @elseif(@Auth::user()->hasRole('Jefe-Academico') || @Auth::user()->hasRole('Jefe-Administrativo')|| @Auth::user()->hasRole('Recurso-Humano'))
                                 @if($item->procedimiento=='enviado a jefatura' || $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
                                     <button data-key="{{ ($item->id) }}" data-toggle="modal" data-target="#modalProcedimiento" class="btn btn-outline-info btn-sm" onclick="fnProcedimiento(this)" title="Seguimiento"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i></button>
                                 @endif
                            
-                            @endif {{--FIN DE CODIGO QUE DESCOMENTARIE--}}
+                            @endif --}}{{--FIN DE CODIGO QUE DESCOMENTARIE--}}
 
                             @php
                                 //para establecer que si la jornada se encuentra finalizada ya no es posible darle seguimiento
@@ -146,14 +146,18 @@
                             @endphp
 
                             @if( (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano')) || ( (@Auth::user()->hasRole('Jefe-Academico') || @Auth::user()->hasRole('Jefe-Administrativo') || @Auth::user()->hasRole('Docente')) && strcmp($item->periodo_rf->estado, 'activo')==0) )
-
+                            @php //var_dump('*********entre'); 
+                            @endphp
                                 @if (($item->empleado_rf->id == Auth::user()->empleado_rf->id))
-
+                                   @php //var_dump('***********entre 1');
+                                    @endphp
                                     @if (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano') )
+                                 
 
                                         @if($item->procedimiento=='guardado' || $item->procedimiento=='enviado a recursos humanos' || $item->procedimiento=='aceptado')
                                             {!! $buttons !!}
                                         @endif
+                                        
 
                                     @elseif((@Auth::user()->hasRole('Docente') && @Auth::user()->hasRole('Jefe-Academico')))
                                         @if($item->procedimiento=='guardado' || $item->procedimiento=='la jefatura lo ha regresado por problemas' ||  $item->procedimiento == 'enviado a jefatura' || $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
@@ -173,29 +177,58 @@
                                             {!! $buttons !!}
                                         @endif
                                     @endif
+
                                 @elseif (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano'))
-                                    @if($item->procedimiento=='enviado a recursos humanos' || $item->procedimiento=='aceptado')
+
+
+                                
+                                {{--codigo que agregue--}}
+                                @if (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano'))
+                                @if( $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
+                                   {{-- @php var_dump('*********ESTADO 1 REPRUEBA'); @endphp--}}
                                         {!! $buttons !!}
                                     @endif
-                                @elseif((@Auth::user()->hasRole('Docente') && @Auth::user()->hasRole('Jefe-Academico')))
-                                    @if($item->procedimiento=='guardado' || $item->procedimiento == 'enviado a jefatura' || $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
+                                @endif
+                                {{--fin de codigo que agregue--}}
+                               
+                                    @if($item->procedimiento=='enviado a recursos humanos' || $item->procedimiento=='aceptado')
+                                    @php // var_dump('*********ESTADO 1');
+                                     @endphp
                                         {!! $buttons !!}
+                                    @endif
+                                
+
+                                @elseif((@Auth::user()->hasRole('Docente') && @Auth::user()->hasRole('Jefe-Academico')))
+                                @php //var_dump('*********ESTADO 2');
+                                 @endphp
+                                    @if($item->procedimiento=='guardado' || $item->procedimiento == 'enviado a jefatura' || $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
+                                    @php //var_dump('*********ESTADO 3'); 
+                                    @endphp {!! $buttons !!}
                                     @endif
                                 @elseif((@Auth::user()->hasRole('Docente') && @Auth::user()->hasRole('Jefe-Administrativo')))
+                                @php //var_dump('*********ESTADO 4'); 
+                                @endphp
                                     @if($item->procedimiento=='guardado' || $item->procedimiento == 'enviado a jefatura')
                                         {!! $buttons !!}
                                     @endif
-                                @elseif(@Auth::user()->hasRole('Jefe-Academico') || @Auth::user()->hasRole('Jefe-Administrativo'))
-                                    @if($item->procedimiento=='enviado a jefatura' || $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
+                                @elseif(@Auth::user()->hasRole('Jefe-Academico') || @Auth::user()->hasRole('Jefe-Administrativo')|| @Auth::user()->hasRole('Recurso-Humano'))
+                                @php //var_dump('*********ESTADO 5'); 
+                                @endphp    
+                                @if($item->procedimiento=='enviado a jefatura' || $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
+                                @php //var_dump('*********ESTADO 4 re');
+                                 @endphp
                                         {!! $buttons !!}
                                     @endif
                                 @elseif(@Auth::user()->hasRole('Docente'))
+                                @php //var_dump('*********ESTADO 5'); 
+                                @endphp
                                     @if($item->procedimiento=='guardado' || $item->procedimiento=='la jefatura lo ha regresado por problemas')
                                         {!! $buttons !!}
                                     @endif
                                 @endif
 
                             @endif
+                            
                         </td>
                     </tr>
                 @endforeach

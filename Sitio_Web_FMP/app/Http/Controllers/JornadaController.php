@@ -178,6 +178,8 @@ class JornadaController extends Controller{
 
         }
 
+      //  echo dd($jornadas);
+
         return view('Jornada.index', compact('emp','cargar','periodos','jornadas', 'deptos',  'periodos', 'periodo', 'depto'));
     }
 
@@ -331,6 +333,8 @@ class JornadaController extends Controller{
     }
 
     public function procedimiento(Request $request){
+
+       // echo dd($request);
         $rules = [
             'jornada_id' => 'required|integer',
             'proceso' => 'required|string',
@@ -491,8 +495,11 @@ class JornadaController extends Controller{
         unset($estados[0]);
 
         if($user->empleado_rf->id == $jornada->empleado_rf->id){
+
             if ($user->hasRole('super-admin') || $user->hasRole('Recurso-Humano')) {
+
                 unset($estados[1], $estados[2], $estados[3], $estados[4]);
+
             } else if ($user->hasRole('Jefe-Academico') || $user->hasRole('Jefe-Administrativo') && !$user->hasRole('Docente')) {
                 unset($estados[5], $estados[4], $estados[1], $estados[2]);
             } else if ($user->hasRole('Jefe-Academico') || $user->hasRole('Jefe-Administrativo') && $user->hasRole('Docente')) {
