@@ -180,7 +180,7 @@
 
                                 @elseif (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano')|| @Auth::user()->hasRole('Jefe-Administrativo'))
 
-                                @php var_dump('***entre 3'); 
+                                @php //var_dump('***entre 3'); 
                                  @endphp
 
                                 
