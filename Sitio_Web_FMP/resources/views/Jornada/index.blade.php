@@ -213,6 +213,12 @@
                                         {!! $buttons !!}
                                     @endif
                                 
+                                    @if(@Auth::user()->hasRole('Recurso-Humano') && $item->procedimiento=='enviado a recursos humanos')
+                                    @php //var_dump('*********ESTADO 1');
+                                     @endphp
+                                        {!! $buttons !!}
+                                    @endif
+                                
 
                                 @elseif((@Auth::user()->hasRole('Docente') && @Auth::user()->hasRole('Jefe-Academico')))
                                 @php //var_dump('*********ESTADO 2');
