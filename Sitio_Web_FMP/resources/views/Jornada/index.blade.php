@@ -142,14 +142,14 @@
                                 if(strcmp('aceptado', $item->procedimiento)!=0)
                                     $buttons.='<button data-key="'.($item->id).'" data-toggle="modal" data-target="#modalProcedimiento" class="btn btn-outline-info btn-sm" onclick="fnProcedimiento(this)" title="Seguimiento"><i class="fa fa-check-circle fa-fw" aria-hidden="true"></i></button>';
 
-                                $buttons .= '<button class="btn btn-outline-primary btn-sm" onclick="fnEditJornada(this);" data-id="'.$item->id.'" title="Editar"><i class="fa fa-edit fa-fw" aria-hidden="true"></i></button>';
+                                    $buttons .= '<button class="btn btn-outline-primary btn-sm" onclick="fnEditJornada(this);" data-id="'.$item->id.'" title="Editar"><i class="fa fa-edit fa-fw" aria-hidden="true"></i></button>';
                             @endphp
 
                             @if( (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano')) || ( (@Auth::user()->hasRole('Jefe-Academico') || @Auth::user()->hasRole('Jefe-Administrativo') || @Auth::user()->hasRole('Docente')) && strcmp($item->periodo_rf->estado, 'activo')==0) )
                             @php //var_dump('******entrexxx'); 
                             @endphp
                                 @if (($item->empleado_rf->id == Auth::user()->empleado_rf->id))
-                                   @php //var_dump('***********entre 1');
+                                   @php var_dump('***********entre 1');
                                     @endphp
                                     @if (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano') )
                                  
@@ -180,7 +180,7 @@
 
                                 @elseif (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano')|| @Auth::user()->hasRole('Jefe-Administrativo'))
 
-                                @php //var_dump('***entre 3'); 
+                                @php var_dump('***entre 3'); 
                                  @endphp
 
                                 
@@ -207,7 +207,7 @@
                                  @endif
                                  {{--fin de codigo que agregue--}}
                                
-                                    @if($item->procedimiento=='enviado a recursos humanos' || $item->procedimiento=='aceptado')
+                                @if(@Auth::user()->hasRole('Recurso-Humano') && $item->procedimiento=='aceptado')
                                     @php //var_dump('*********ESTADO 1');
                                      @endphp
                                         {!! $buttons !!}
