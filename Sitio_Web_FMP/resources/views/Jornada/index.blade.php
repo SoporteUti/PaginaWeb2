@@ -196,10 +196,10 @@
                                 {{--fin de codigo que agregue--}}
 
                                  {{--codigo que agregue--}}
-                                 @if (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Jefe-Administrativo'))
+                                @if (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Jefe-Administrativo'))
                                  @php //var_dump('####Admi'); 
                                  @endphp
-                                 @if( $item->procedimiento=='recursos humanos lo ha regresado a jefatura')
+                                 @if( $item->procedimiento=='recursos humanos lo ha regresado a jefatura' ||  $item->procedimiento=='enviado a jefatura')
                                      @php //var_dump('*********ESTADO 1 REPRUEBA'); 
                                      @endphp
                                          {!! $buttons !!}
@@ -211,7 +211,7 @@
                                     @php //var_dump('*********ESTADO 1');
                                      @endphp
                                         {!! $buttons !!}
-                                    @endif
+                                @endif
                                 
                                     @if(@Auth::user()->hasRole('Recurso-Humano') && $item->procedimiento=='enviado a recursos humanos')
                                     @php //var_dump('*********ESTADO 1');
