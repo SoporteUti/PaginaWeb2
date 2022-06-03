@@ -356,7 +356,7 @@
                 $("#id_periodo").selectpicker('refresh');
                 $("#id_periodo_text").prop('disabled', false);
                 $("#id_periodo_text").val($("#id_periodo").val());
-                $("#id_periodo").prop('disabled', true);
+               // $("#id_periodo").prop('disabled', true);
             }
             if(updateEmpleado && empleado!==null || is_edited == 'true'){//para uctualizar el dato del empleado
                 $("#id_emp").val(empleado).trigger('change');
