@@ -149,7 +149,7 @@
                             @php //var_dump('******entrexxx'); 
                             @endphp
                                 @if (($item->empleado_rf->id == Auth::user()->empleado_rf->id))
-                                   @php var_dump('***********entre 1');
+                                   @php //var_dump('***********entre 1');
                                     @endphp
                                     @if (@Auth::user()->hasRole('super-admin') || @Auth::user()->hasRole('Recurso-Humano') )
                                  
