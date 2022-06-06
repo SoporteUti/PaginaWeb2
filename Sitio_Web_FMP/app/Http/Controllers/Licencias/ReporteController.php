@@ -86,50 +86,52 @@ class ReporteController extends Controller
 
         $query = "select des.nombre, des.salario,string_agg(des.fecha,' - ') dias, string_agg(des.jornada::varchar,' - ' ) jornada, sum(des.minutosSimples) minutosSimples,
         sum(des.minutos) minutosDobles, sum(des.descuento) descuentos
-        from (select e.id,to_char((r.entrada::time-ji.hora_inicio::time)-r.gracia::time,'HH24:MI:SS') hrs_input,
+        from (
+            select e.id,to_char((r.entrada::time-ji.hora_inicio::time)-r.gracia::time,'HH24:MI:SS') hrs_input,/**/
+
+            (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                    inner join empleado ON empleado.id = permisos.empleado
+                    where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+            THEN('0') 
+            else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
+                ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
+                to_char(r.gracia::time,'MI')::numeric end)::integer  minutosSimples,
+    /*minutos dobles */		   
+    ((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                    inner join empleado ON empleado.id = permisos.empleado
+                    where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+            THEN('0') 
+            else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
+                ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
+                to_char(r.gracia::time,'MI')::numeric end)::integer) *2 minutos,
+    /*minutos dobles*/				 
         
-        (to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::numeric + 
-        ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3) -
+    TRIM(e.apellido)||' '||TRIM(e.nombre) as nombre, e.salario,r.entrada,to_char(r.fecha::date,'DD') fecha, 
+    to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
+        ROUND(to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60,2) jornada,
         
-                (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                         inner join empleado ON empleado.id = permisos.empleado
-                         where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                THEN
-                (select to_char(hora_final-hora_inicio,'HH24')::integer*60+(to_char(hora_final-hora_inicio,'MI'))::numeric +
-                 ROUND(to_char(hora_final-hora_inicio,'SS')::numeric*60/3600,3)
-                 from permisos where fecha_uso=r.fecha::date ) else ('0') end))::integer - 5 minutosSimples,
+
+    ROUND(( 
+        ((e.salario/" . $dias . ")/(to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
+        to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric *
         
-       ((to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::numeric + 
-        ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3) -
+        ( ((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                    inner join empleado ON empleado.id = permisos.empleado
+                    where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+            THEN('0') 
+            else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
+                ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
+                to_char(r.gracia::time,'MI')::numeric end)::integer) *2)
         
-                (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                         inner join empleado ON empleado.id = permisos.empleado
-                         where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                THEN
-                (select to_char(hora_final-hora_inicio,'HH24')::integer*60+(to_char(hora_final-hora_inicio,'MI'))::numeric +
-                 ROUND(to_char(hora_final-hora_inicio,'SS')::numeric*60/3600,3)
-                 from permisos where fecha_uso=r.fecha::date ) else ('0') end))::integer-5) *2 minutos,
-             
-        TRIM(e.apellido)||' '||TRIM(e.nombre) as nombre, e.salario,r.entrada,to_char(r.fecha::date,'DD') fecha, to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
-            ROUND(to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60,2) jornada,
-            
-        
-            ROUND(( 
-                ((e.salario/" . $dias . ")/(to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
-                to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric *
-                
-               ( ((to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::numeric + 
-            ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3) -
-            
-                    (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                             inner join empleado ON empleado.id = permisos.empleado
-                             where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                    THEN
-                    (select to_char(hora_final-hora_inicio,'HH24')::integer*60+(to_char(hora_final-hora_inicio,'MI'))::numeric +
-                     ROUND(to_char(hora_final-hora_inicio,'SS')::numeric*60/3600,3)
-                     from permisos where fecha_uso=r.fecha::date ) else ('0') end))::integer-5)*2)
-                
-            ),2) descuento
+    ),2) descuento,
+    /*agregando detalle*/
+    (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                    inner join empleado ON empleado.id = permisos.empleado
+                    where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+            THEN('Solventó') 
+            else ('Deficit') end) solvente
+
+    /*fin del detalle que corregio*/
         from empleado e 
         inner join jornada ON e.id = jornada.id_emp
         inner join jornada_items ji ON ji.id_jornada = jornada.id
@@ -906,50 +908,50 @@ class ReporteController extends Controller
             ->get();
 
         $query = "select e.id,to_char((r.entrada::time-ji.hora_inicio::time)-r.gracia::time,'HH24:MI:SS') hrs_input,/**/
-        
-          (to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::numeric + 
-          ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3) -
-          
-                  (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                           inner join empleado ON empleado.id = permisos.empleado
-                           where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                  THEN
-                  (select to_char(hora_final-hora_inicio,'HH24')::integer*60+(to_char(hora_final-hora_inicio,'MI'))::numeric +
-                   ROUND(to_char(hora_final-hora_inicio,'SS')::numeric*60/3600,3)
-                   from permisos where fecha_uso=r.fecha::date ) else ('0') end))::integer - 5 minutosSimples,
-          
-         ((to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::numeric + 
-          ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3) -
-          
-                  (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                           inner join empleado ON empleado.id = permisos.empleado
-                           where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                  THEN
-                  (select to_char(hora_final-hora_inicio,'HH24')::integer*60+(to_char(hora_final-hora_inicio,'MI'))::numeric +
-                   ROUND(to_char(hora_final-hora_inicio,'SS')::numeric*60/3600,3)
-                   from permisos where fecha_uso=r.fecha::date ) else ('0') end))::integer-5) *2 minutos,
-               
-          TRIM(e.apellido)||' '||TRIM(e.nombre) as nombre, e.salario,r.entrada,to_char(r.fecha::date,'DD-MM-YYYY') fecha, 
-          to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
-              ROUND(to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60,2) jornada,
-              
-          
-          ROUND(( 
-              ((e.salario/" . $dias . ")/(to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
-              to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric *
-              
-              (((to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::numeric + 
-          ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3) -
-          
-                  (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                           inner join empleado ON empleado.id = permisos.empleado
-                           where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                  THEN
-                  (select to_char(hora_final-hora_inicio,'HH24')::integer*60+(to_char(hora_final-hora_inicio,'MI'))::numeric +
-                   ROUND(to_char(hora_final-hora_inicio,'SS')::numeric*60/3600,3)
-                   from permisos where fecha_uso=r.fecha::date ) else ('0') end))::integer-5)*2)
-              
-          ),2) descuento
+
+                    (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                            inner join empleado ON empleado.id = permisos.empleado
+                            where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+                    THEN('0') 
+                    else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
+                        ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
+                        to_char(r.gracia::time,'MI')::numeric end)::integer  minutosSimples,
+            /*minutos dobles */		   
+            ((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                            inner join empleado ON empleado.id = permisos.empleado
+                            where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+                    THEN('0') 
+                    else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
+                        ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
+                        to_char(r.gracia::time,'MI')::numeric end)::integer) *2 minutos,
+            /*minutos dobles*/				 
+                
+            TRIM(e.apellido)||' '||TRIM(e.nombre) as nombre, e.salario,r.entrada,to_char(r.fecha::date,'DD-MM-YYYY') fecha, 
+            to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
+                ROUND(to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60,2) jornada,
+                
+
+            ROUND(( 
+                ((e.salario/" . $dias . ")/(to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
+                to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric *
+                
+                ( ((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                            inner join empleado ON empleado.id = permisos.empleado
+                            where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+                    THEN('0') 
+                    else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
+                        ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
+                        to_char(r.gracia::time,'MI')::numeric end)::integer) *2)
+                
+            ),2) descuento,
+            /*agregando detalle*/
+            (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                            inner join empleado ON empleado.id = permisos.empleado
+                            where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+                    THEN('Solventó') 
+                    else ('Deficit') end) solvente
+
+            /*fin del detalle que corregio*/
           from empleado e 
           inner join jornada ON e.id = jornada.id_emp
           inner join jornada_items ji ON ji.id_jornada = jornada.id
@@ -1327,10 +1329,11 @@ class ReporteController extends Controller
     //FIN DE GENERAR ASISTENCIA MENUAL PARA EMPLEADOS
 
     //***PARA MOSTRAR EN EL BLADE DE ASISTENCIA POR EMPLEADO */
-    public function bladeAsistenciaEmpleado(){
+    public function bladeAsistenciaEmpleado()
+    {
         $años = Reloj_dato::selectRaw('distinct to_char(reloj_datos.fecha::date, \'YYYY\') as año')->get();
         $mes = Reloj_dato::selectRaw('distinct to_char(reloj_datos.fecha::date, \'MM\') as mes')->get();
-        
+
         return view('Reportes.AsistenciaEmpleado.AsistenciaEmpleadoTabla', compact('mes', 'años'));
     }
 
@@ -1387,32 +1390,29 @@ class ReporteController extends Controller
     public function mostrarTablaAsistencia($mes, $anio)
     {
 
-       if($anio == 'todos'){
-        $datos = Reloj_dato::selectRaw('*')
-        ->join('empleado', 'empleado.dui', '=', 'reloj_datos.id_persona')
-        ->where(
-            [
-                ['empleado.id', '=',  auth()->user()->empleado]
-            ]
-        )->get();
-
-        
-        }else{
+        if ($anio == 'todos') {
+            $datos = Reloj_dato::selectRaw('*')
+                ->join('empleado', 'empleado.dui', '=', 'reloj_datos.id_persona')
+                ->where(
+                    [
+                        ['empleado.id', '=',  auth()->user()->empleado]
+                    ]
+                )->get();
+        } else {
 
             $datos = Reloj_dato::selectRaw('*')
-            ->join('empleado', 'empleado.dui', '=', 'reloj_datos.id_persona')
-            ->where(
-                [
-                    ['empleado.id', '=',  auth()->user()->empleado]
-                ]
-            ) ->whereRaw('to_char(reloj_datos.fecha::date,\'MM\')::int=' . $mes)
-            ->whereRaw('to_char(reloj_datos.fecha::date,\'YYYY\')::int=' . $anio)
-           ->get();
-            
+                ->join('empleado', 'empleado.dui', '=', 'reloj_datos.id_persona')
+                ->where(
+                    [
+                        ['empleado.id', '=',  auth()->user()->empleado]
+                    ]
+                )->whereRaw('to_char(reloj_datos.fecha::date,\'MM\')::int=' . $mes)
+                ->whereRaw('to_char(reloj_datos.fecha::date,\'YYYY\')::int=' . $anio)
+                ->get();
         }
-        
-            //->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio);
-        
+
+        //->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio);
+
         //echo dd($datos);
 
         foreach ($datos as $item) {
@@ -1428,7 +1428,7 @@ class ReporteController extends Controller
 
         return isset($data) ? response()->json($data, 200, []) : response()->json([], 200, []);
     }
-    
+
     //***************/FIN DE MOSTRAR EN LA TABLA DE ASISTENCIA MENSUAL EMPLEADO */
 
     public function AsistenciaPersonalPDF(Request $request)
@@ -1502,7 +1502,7 @@ class ReporteController extends Controller
         $deptos = Departamento::all();
         $años = Permiso::selectRaw('distinct to_char(permisos.fecha_uso, \'YYYY\') as año')->get();
         // echo dd($deptos);
-        return view('Reportes.LicenciasReportes.MostrarLicencias', compact('deptos','años'));
+        return view('Reportes.LicenciasReportes.MostrarLicencias', compact('deptos', 'años'));
     }
     //FIN DE MOSTRAR LA VISTA EN LICENCIAS
 
@@ -1614,7 +1614,7 @@ class ReporteController extends Controller
                     ['permisos.estado', '=', 'Aceptado']
                 ]
             )->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio)
-            ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $mes)->get();
+                ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $mes)->get();
             //->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio);
         } else {
             $permisos = $permisoss->Where(
@@ -1632,7 +1632,7 @@ class ReporteController extends Controller
                     ['departamentos.id', '=', $dep]
                 ]
             )->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio)
-            ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $mes)->get();
+                ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $mes)->get();
         }
         // echo dd($permisos);
 
@@ -1910,7 +1910,7 @@ class ReporteController extends Controller
                     ['permisos.estado', '=', 'Aceptado']
                 ]
             )->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $request->inicioR)
-            ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $request->finR)->get();
+                ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $request->finR)->get();
             //para mostrar solo los departamentos que tienen permisos
             $departamentos = Empleado::selectRaw(' DISTINCT id_depto,departamentos.nombre_departamento,departamentos.id')
                 ->join('departamentos', 'departamentos.id', '=', 'empleado.id_depto')
@@ -1927,7 +1927,7 @@ class ReporteController extends Controller
                 )->where(
                     [
                         ['permisos.estado', '=', 'Aceptado']
-                       
+
                     ]
                 )->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $request->finR)
                 ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $request->inicioR)->get();
@@ -1949,7 +1949,7 @@ class ReporteController extends Controller
                     ['departamentos.id', '=', $request->deptoR_R]
                 ]
             )->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $request->finR)
-            ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $request->inicioR)->get();
+                ->whereRaw('to_char(permisos.fecha_uso,\'MM\')::int=' . $request->inicioR)->get();
 
             $departamentos = Departamento::where('id', '=', $request->deptoR_R)->get();
         }

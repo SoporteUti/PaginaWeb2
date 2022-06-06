@@ -94,6 +94,8 @@
                 <th style="text-align: center">Minutos Simples</th>
                 <th style="text-align: center">Minutos dobles</th>
                 <th style="text-align: center">Descuento Diario</th>
+                <th style="text-align: center">Estado</th>
+
 
 
 
@@ -122,6 +124,8 @@
                     <td style="text-align: center;">{{ $r->minutossimples }}</td>
                     <td style="text-align: center;">{{ $r->minutos }}</td>
                     <td style="text-align: center;">{{'$'}}{{ $r->descuento }}</td>
+                    <td style="text-align: center;">{{ $r->solvente }}</td>
+
 
                 </tr>
             @endforeach
@@ -136,7 +140,7 @@
                 <th style="text-align: center">{{ $totalSimple }}{{' Minutos'}}</th>
                 <th style="text-align: center">{{ $totalDoble}} {{' Minutos'}}</th>
                 <th style="text-align: center">{{'$'}}{{ $totalDescuento}}</th>
-               
+                <th style="text-align: center" >{{' '}}</th>               
             </tr>
           
 
