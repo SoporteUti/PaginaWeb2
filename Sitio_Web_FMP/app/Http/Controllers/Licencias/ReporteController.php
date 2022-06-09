@@ -471,6 +471,7 @@ class ReporteController extends Controller
             and ji.dia=r.dia_semana 
             and  to_char(r.fecha::date,'YYYY')::int=" . $request->anio . "
             and to_char(r.fecha::date,'MM')::int=" . $request->mes . "
+            and (r.salida <= ji.hora_fin or r.entrada='-' or r.salida='-')
             GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin
             order by e.nombre,r.fecha) pivot GROUP by pivot.em,pivot.ap,pivot.salario";
 
