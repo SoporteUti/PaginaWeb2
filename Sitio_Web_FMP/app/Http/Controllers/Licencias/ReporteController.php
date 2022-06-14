@@ -195,7 +195,7 @@ class ReporteController extends Controller
                      
                 /*fin calculo por horas*/
 
-                e.nombre as em, e.apellido as ap,r.entrada, r.salida,r.fecha,
+                e.nombre as em, e.apellido as ap,r.entrada, r.salida,to_char(r.fecha::date,'DD') fecha,
                  to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
                   ROUND(to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60,2) jornada,
                 e.salario,
