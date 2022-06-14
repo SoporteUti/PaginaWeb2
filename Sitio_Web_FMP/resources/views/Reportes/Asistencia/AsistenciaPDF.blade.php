@@ -72,7 +72,7 @@
             @elseif($request->asis_mes == '12')
                 Diciembre
             @endif
-            del {{ $request->asis_anio }}<br>
+            de {{ $request->asis_anio }}<br>
             Departamento: {{ $e->nombre_departamento }}<br>
 
         </h4>

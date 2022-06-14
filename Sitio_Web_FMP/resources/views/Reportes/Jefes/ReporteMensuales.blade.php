@@ -45,7 +45,7 @@
             Universidad de El Salvador<br>
             Facultad Multidisciplinaria Paracentral <br>
             {{ $dep->nombre_departamento }}{{ ' ' }}<br>
-            {{$request->mesR}} del {{$request->anio}}
+            {{$request->mesR}} de {{$request->anio}}
           
             <br>
 

@@ -70,7 +70,7 @@
             @elseif($request->inicioR == '12')
                 Diciembre
             @endif
-            del {{ $request->finR }}<br>
+            de {{ $request->finR }}<br>
 
         </h4>
 

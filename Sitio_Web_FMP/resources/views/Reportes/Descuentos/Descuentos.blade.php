@@ -44,9 +44,9 @@
         <h4 align="center">
             Universidad de El Salvador<br>
             Facultad Multidisciplinaria Paracentral <br>
-            Departamento: {{ $dep->nombre_departamento }}{{ ' ' }} Mes: {{$mes}} 
+            Departamento: {{ $dep->nombre_departamento }}{{ ' ' }} &nbsp; &nbsp; &nbsp; Mes: {{$mes}} 
           
-            del {{ $request->anio }}<br>
+            de {{ $request->anio }}<br>
             <br>
         </h4>
         

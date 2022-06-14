@@ -75,7 +75,7 @@
             @elseif($request->asistencia_mes == '12')
                 Diciembre
             @endif
-            del {{ $request->asistencia_anio }}<br>    
+            de {{ $request->asistencia_anio }}<br>    
 
         </h4>
     @endforeach
