@@ -84,7 +84,7 @@ class ReporteController extends Controller
             ->where('departamentos.id', $request->id_depto)
             ->get();
 
-        $query = "select des.nombre, des.salario,string_agg(des.fecha,' - ') dias, string_agg(des.jornada::varchar,' - ' ) jornada, sum(des.minutosSimples) minutosSimples,
+        $query = "select des.nombre, des.salario,string_agg(des.fecha,',') dias, string_agg(des.jornada::varchar,',' ) jornada, sum(des.minutosSimples) minutosSimples,
         sum(des.minutos) minutosDobles, sum(des.descuento) descuentos
         from (
             select e.id,to_char((r.entrada::time-ji.hora_inicio::time)-r.gracia::time,'HH24:MI:SS') hrs_input,/**/
@@ -149,7 +149,7 @@ class ReporteController extends Controller
 
         $todosDescuentos = DB::select($query);
         //DESCUENTO POR INASISTENCIA
-        $query_inasistencia = "select TRIM(pivot.ap)||' '||TRIM(pivot.em) as nombre ,pivot.salario,string_agg(pivot.fecha,' - ') dia_mes, string_agg(pivot.jornada::varchar,' - ') jornadas,
+        $query_inasistencia = "select TRIM(pivot.ap)||' '||TRIM(pivot.em) as nombre ,pivot.salario,string_agg(pivot.fecha,',') dia_mes, string_agg(pivot.jornada::varchar,',') jornadas,
 
             (sum(pivot.inas_entrada::time)+ sum(pivot.inas_salida::time)+sum(pivot.inas_entrada_salida::time)+sum(pivot.inas_salida_antes::time)) hrs_inasis,
 
@@ -555,7 +555,7 @@ class ReporteController extends Controller
         //FIN DE DESCUENTO POR INASISTENCIA
 
         //PARA GENERAR TODOS LOS DESCUENTOS POR LICENCIA SIN GOSE DE SUELDO
-        $licencia_sinGoce = "select TRIM(gs.ap)||' '||TRIM(gs.nombre) as nombre,string_agg(gs.fecha, ' - ') fecha,sum(gs.total_minutos) total_minutos, string_agg(gs.jornada::varchar,' - ') jornada,
+        $licencia_sinGoce = "select TRIM(gs.ap)||' '||TRIM(gs.nombre) as nombre,string_agg(gs.fecha, ',') fecha,sum(gs.total_minutos) total_minutos, string_agg(gs.jornada::varchar,',') jornada,
         gs.salario,sum(gs.descuento) descuento
         from(select
         e.nombre as nombre, e.apellido as ap,to_char(r.fecha::date,'DD') fecha ,permisos.hora_inicio,permisos.hora_final,
