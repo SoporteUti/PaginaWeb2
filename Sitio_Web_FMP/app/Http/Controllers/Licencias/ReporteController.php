@@ -137,6 +137,7 @@ class ReporteController extends Controller
         inner join jornada_items ji ON ji.id_jornada = jornada.id
         inner join reloj_datos r on e.dui=r.id_persona
         where e.id_depto=" . $request->id_depto . " and e.dui=r.id_persona
+        and jornada.estado='activo'
         and ji.dia=r.dia_semana and ji.hora_inicio::time+'00:05:59' < r.entrada::time
         and  to_char(r.fecha::date,'YYYY')::int=" . $request->anio . "
         and to_char(r.fecha::date,'MM')::int=" . $request->mes . " and r.entrada !='-'
@@ -537,6 +538,7 @@ class ReporteController extends Controller
             inner join jornada_items ji ON ji.id_jornada = jornada.id
             inner join reloj_datos r on e.dui=r.id_persona
             where e.id_depto=" . $request->id_depto . " and e.dui=r.id_persona
+            and jornada.estado='activo'
             and ji.dia=r.dia_semana 
             and  to_char(r.fecha::date,'YYYY')::int=" . $request->anio . "
             and to_char(r.fecha::date,'MM')::int=" . $request->mes . "
