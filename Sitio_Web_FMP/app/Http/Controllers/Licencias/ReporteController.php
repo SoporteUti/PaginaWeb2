@@ -608,7 +608,8 @@ class ReporteController extends Controller
         inner join jornada_items ji ON ji.id_jornada = jornada.id
         inner join reloj_datos r on e.dui=r.id_persona
         where e.id_depto=" . $request->id_depto . " and e.dui=r.id_persona
-        and ji.dia=r.dia_semana and r.entrada='-' and r.salida='-' 
+        and ji.dia=r.dia_semana and r.entrada='-' and r.salida='-'
+        and jornada.estado='activo'
         and permisos.tipo_permiso='LS/GS' and permisos.estado='Aceptado'
         and  to_char(r.fecha::date,'YYYY')::int=" . $request->anio . "
         and to_char(r.fecha::date,'MM')::int=" . $request->mes . "
@@ -1029,6 +1030,7 @@ class ReporteController extends Controller
           inner join jornada_items ji ON ji.id_jornada = jornada.id
           inner join reloj_datos r on e.dui=r.id_persona
           where e.id=" . $request->_id_des . " and e.dui=r.id_persona
+          and jornada.estado='activo'
           and ji.dia=r.dia_semana and ji.hora_inicio::time+'00:05' < r.entrada::time
           and  to_char(r.fecha::date,'YYYY')::int=" . $request->des_anio . "
           and to_char(r.fecha::date,'MM')::int=" . $request->des_mes . " and r.entrada !='-'
@@ -1382,6 +1384,7 @@ class ReporteController extends Controller
         inner join reloj_datos r on e.dui=r.id_persona
         where e.id=" . $request->_id_des . " and e.dui=r.id_persona
         and ji.dia=r.dia_semana
+        and jornada.estado='activo'
         and (r.salida <= ji.hora_fin or r.entrada='-' or r.salida='-')
         and  to_char(r.fecha::date,'YYYY')::int=" . $request->des_anio . "
         and to_char(r.fecha::date,'MM')::int=" . $request->des_mes . "
@@ -1447,6 +1450,7 @@ class ReporteController extends Controller
         inner join reloj_datos r on e.dui=r.id_persona
         where e.id=" . $request->_id_des . " and e.dui=r.id_persona
         and ji.dia=r.dia_semana and r.entrada='-' and r.salida='-' 
+        and jornada.estado='activo'
         and permisos.tipo_permiso='LS/GS' and permisos.estado='Aceptado'
         and  to_char(r.fecha::date,'YYYY')::int=" . $request->des_anio . "
         and to_char(r.fecha::date,'MM')::int=" . $request->des_mes . "
