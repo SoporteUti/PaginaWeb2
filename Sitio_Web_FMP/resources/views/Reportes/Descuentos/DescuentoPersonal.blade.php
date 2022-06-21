@@ -118,7 +118,7 @@
                 @endphp
                 <tr>
                     <td style="text-align: center;">{{ $i }}</td>
-                    <td style="text-align: center;">{{ Carbon\Carbon::parse($r->fecha)->format('d/M/Y') }}</td>
+                    <td style="text-align: center;">{{ Carbon\Carbon::parse(strtotime($r->fecha))->formatLocalized('%d/%B/%Y') }}</td>
                     <td style="text-align: center;">{{ $r->entrada }}</td>
                     <td style="text-align: center;">{{ $r->jornada   }}</td>
                     <td style="text-align: center;">{{ $r->minutossimples }}</td>
@@ -206,7 +206,7 @@
                 @endphp
                 <tr>
                     <td style="text-align: center;">{{ $i }}</td>
-                    <td style="text-align: center;">{{ Carbon\Carbon::parse($di->fecha)->format('d/M/Y') }}</td>
+                    <td style="text-align: center;">{{ Carbon\Carbon::parse(strtotime($di->fecha))->formatLocalized('%d/%B/%Y') }}</td>
                     <td style="text-align: center;">{{ $di->entrada }}</td>
                     <td style="text-align: center;">{{ $di->salida }}</td>
                     <td style="text-align: center;">{{ $di->jornada }}</td>
@@ -303,7 +303,7 @@
                 @endphp
                 <tr>
                     <td style="text-align: center;">{{ $i }}</td>
-                    <td style="text-align: center;">{{ Carbon\Carbon::parse($sg->fecha)->format('d/M/Y') }}</td>
+                    <td style="text-align: center;">{{ Carbon\Carbon::parse(strtotime($sg->fecha))->formatLocalized('%d/%B/%Y') }}</td>
                     <td style="text-align: center;">{{ $sg->hora_inicio }}</td>
                     <td style="text-align: center;">{{ $sg->hora_final  }}</td>
                     <td style="text-align: center;">{{ $sg->jornada }}</td>

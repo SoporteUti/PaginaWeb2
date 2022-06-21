@@ -20,6 +20,7 @@ class ReporteController extends Controller
     //PARA GENERAR EL PDF DE LOS DESCUENTOS
     public function DescuentosPDF(Request $request)
     {
+     
 
         $validator = Validator::make($request->all(), [
             'id_depto'  => 'required',

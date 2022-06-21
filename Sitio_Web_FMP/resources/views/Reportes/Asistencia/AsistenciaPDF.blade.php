@@ -79,8 +79,8 @@
     @endforeach
     <h4 align="center">
         @foreach ($periodos as $p)
-            Jornada Laboral para el periodo del :{{ Carbon\Carbon::parse($p->fecha_inicio)->format('d/M/Y') }} al
-            {{ Carbon\Carbon::parse($p->fecha_fin)->format('d/M/Y') }}<br>
+            Jornada Laboral para el periodo del :{{ Carbon\Carbon::parse(strtotime($p->fecha_inicio))->formatLocalized('%d/%B/%Y') }} al
+            {{ Carbon\Carbon::parse(strtotime($p->fecha_fin))->formatLocalized('%d/%B/%Y') }}<br>
         @endforeach
     </h4>
 
@@ -140,7 +140,7 @@
                 @endphp
                 <tr>
                     <td style="text-align: center;">{{ $i }}</td>
-                    <td style="text-align: center;">{{ Carbon\Carbon::parse($r->fecha)->format('d/M/Y') }}</td>
+                    <td style="text-align: center;">{{ Carbon\Carbon::parse(strtotime($r->fecha))->formatLocalized('%d/%B/%Y') }}</td>
                     <td style="text-align: center;">{{ $r->hora_inicio }}</td>
                     <td style="text-align: center;">{{ $r->entrada }}</td>
                     <td style="text-align: center;">{{ $r->hrs_input }}</td>
