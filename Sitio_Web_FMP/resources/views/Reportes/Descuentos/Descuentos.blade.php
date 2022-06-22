@@ -65,8 +65,8 @@
                     <th style="text-align: center">Nombre</th>
                     <th style="text-align: center">Dias del mes</th>
                     <th style="text-align: center">Jornadas</th>
-                    <th style="text-align: center">Minutos Simples</th>
-                    <th style="text-align: center">Minutos Dobles</th>
+                    <th style="text-align: center">Minutos</th>
+              
                     <th style="text-align: center">Descuento($)</th>
                 </tr>
             </thead>
@@ -86,7 +86,7 @@
                             <td style="text-align: center;">{{ $item->dias }}</td>
                             <td style="text-align: center;">{{ $item->jornada}}</td>
                             <td style="text-align: center;">{{ $item->minutossimples}}</td>
-                            <td style="text-align: center;">{{ $item->minutosdobles}}</td>
+                       
 
                             <td style="text-align: center;">{{'$'}}{{$item->descuentos}}</td>
                            

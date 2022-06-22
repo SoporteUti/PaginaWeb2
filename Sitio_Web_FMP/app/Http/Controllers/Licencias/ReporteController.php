@@ -86,7 +86,7 @@ class ReporteController extends Controller
             ->get();
 
         $query = "select des.nombre, des.salario,string_agg(des.fecha,', ') dias, string_agg(des.jornada::varchar,', ' ) jornada, sum(des.minutosSimples) minutosSimples,
-        sum(des.minutos) minutosDobles, sum(des.descuento) descuentos
+        sum(des.descuento) descuentos
         from (
             select e.id,to_char((r.entrada::time-ji.hora_inicio::time)-r.gracia::time,'HH24:MI:SS') hrs_input,/**/
 
@@ -97,15 +97,7 @@ class ReporteController extends Controller
             else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
                 ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
                 to_char(r.gracia::time,'MI')::numeric end)::integer  minutosSimples,
-            /*minutos dobles */		   
-            ((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                    inner join empleado ON empleado.id = permisos.empleado
-                    where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-            THEN('0') 
-            else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
-                ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
-                to_char(r.gracia::time,'MI')::numeric end)::integer) *2 minutos,
-             /*minutos dobles*/				 
+         			 
         
              TRIM(e.apellido)||' '||TRIM(e.nombre) as nombre, e.salario,r.entrada,to_char(r.fecha::date,'DD') fecha, 
             to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
@@ -122,7 +114,7 @@ class ReporteController extends Controller
             THEN('0') 
             else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
                 ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
-                to_char(r.gracia::time,'MI')::numeric end)::integer) *2)
+                to_char(r.gracia::time,'MI')::numeric end)::integer))
         
             ),2) descuento,
              /*agregando detalle*/
@@ -993,16 +985,7 @@ class ReporteController extends Controller
                     else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
                         ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
                         to_char(r.gracia::time,'MI')::numeric end)::integer  minutosSimples,
-            /*minutos dobles */		   
-            ((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                            inner join empleado ON empleado.id = permisos.empleado
-                            where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                    THEN('0') 
-                    else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
-                        ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
-                        to_char(r.gracia::time,'MI')::numeric end)::integer) *2 minutos,
-            /*minutos dobles*/				 
-                
+            
             TRIM(e.apellido)||' '||TRIM(e.nombre) as nombre, e.salario,r.entrada,to_char(r.fecha::date,'DD-MM-YYYY') fecha, 
             to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
                 ROUND(to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60,2) jornada,
@@ -1018,7 +1001,7 @@ class ReporteController extends Controller
                     THEN('0') 
                     else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
                         ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
-                        to_char(r.gracia::time,'MI')::numeric end)::integer) *2)
+                        to_char(r.gracia::time,'MI')::numeric end)::integer))
                 
             ),2) descuento,
             /*agregando detalle*/

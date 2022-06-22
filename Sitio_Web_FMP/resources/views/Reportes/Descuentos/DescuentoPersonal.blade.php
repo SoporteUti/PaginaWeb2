@@ -91,8 +91,7 @@
                 <th style="text-align: center">Fecha</th>
                 <th style="text-align: center">Hora Marcaje</th>
                 <th style="text-align: center">Jornada</th>
-                <th style="text-align: center">Minutos Simples</th>
-                <th style="text-align: center">Minutos dobles</th>
+                <th style="text-align: center">Minutos</th>
                 <th style="text-align: center">Descuento Diario</th>
                 <th style="text-align: center">Estado</th>
 
@@ -113,7 +112,7 @@
                 @php
                     $i++;
                     $totalSimple    =  $totalSimple + $r->minutossimples;
-                    $totalDoble     =  $totalDoble + $r->minutos ;
+            
                     $totalDescuento =  $totalDescuento + $r->descuento;
                 @endphp
                 <tr>
@@ -122,7 +121,6 @@
                     <td style="text-align: center;">{{ $r->entrada }}</td>
                     <td style="text-align: center;">{{ $r->jornada   }}</td>
                     <td style="text-align: center;">{{ $r->minutossimples }}</td>
-                    <td style="text-align: center;">{{ $r->minutos }}</td>
                     <td style="text-align: center;">{{'$'}}{{ $r->descuento }}</td>
                     <td style="text-align: center;">{{ $r->solvente }}</td>
 
@@ -134,11 +132,9 @@
             <tr>
                 <th style="text-align: center"  >{{''}}</th>
                 <th style="text-align: center" >{{'        '}}</th>
-                <th style="text-align: center" >{{' '}}</th>
-
+                <th style="text-align: center" >{{' '}}</th>               
                 <th style="text-align: center" >{{'Total   '}}{{'                     '}}</th>
                 <th style="text-align: center">{{ $totalSimple }}{{' Minutos'}}</th>
-                <th style="text-align: center">{{ $totalDoble}} {{' Minutos'}}</th>
                 <th style="text-align: center">{{'$'}}{{ $totalDescuento}}</th>
                 <th style="text-align: center" >{{' '}}</th>               
             </tr>
