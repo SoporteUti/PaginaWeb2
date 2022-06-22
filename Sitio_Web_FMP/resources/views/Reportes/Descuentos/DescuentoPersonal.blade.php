@@ -117,7 +117,7 @@
                 @endphp
                 <tr>
                     <td style="text-align: center;">{{ $i }}</td>
-                    <td style="text-align: center;">{{ strtotime($r->fecha)->format('d/M/Y') }}</td>
+                    <td style="text-align: center;">{{ strtotime($r->fecha) }}</td>
                     <td style="text-align: center;">{{ $r->entrada }}</td>
                     <td style="text-align: center;">{{ $r->jornada   }}</td>
                     <td style="text-align: center;">{{ $r->minutossimples }}</td>
