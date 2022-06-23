@@ -147,7 +147,8 @@ class ReporteController extends Controller
             (sum(pivot.inas_entrada::time)+ sum(pivot.inas_salida::time)+sum(pivot.inas_entrada_salida::time)+sum(pivot.inas_salida_antes::time)) hrs_inasis,
 
             (sum(pivot.minutos_entrada)+ sum(pivot.minutos_salida)+sum(pivot.minutos_entrada_salida)+sum(pivot.minutos_salida_antes)) minutos,
-            (sum(pivot.descuento_entrada)+ sum(pivot.descuento_salida)+sum(pivot.descuento_entrada_salida)+sum(pivot.descuento_salida_antes)) descuento
+            (sum(pivot.descuento_entrada)+ sum(pivot.descuento_salida)+sum(pivot.descuento_entrada_salida)+sum(pivot.descuento_salida_antes)) descuento,
+            string_agg(pivot.min_dias, ', ')horas_dias, string_agg(pivot.solvente,', ')solvente
             from(
                 select
                 /*calculo por horas*/
@@ -191,6 +192,13 @@ class ReporteController extends Controller
                 /*fin calculo por horas*/
 
                 e.nombre as em, e.apellido as ap,r.entrada, r.salida,to_char(r.fecha::date,'DD') fecha,
+                /*agregando detalle*/
+                (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                        inner join empleado ON empleado.id = permisos.empleado
+                        where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+                THEN('Solventó') 
+                else ('Deficit') end) solvente,
+                    /*Agregando detalle*/
                  to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
                   ROUND(to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60,2) jornada,
                 e.salario,
@@ -523,9 +531,16 @@ class ReporteController extends Controller
                 ) END ))
                     
                                
-                          ),2) descuento_salida_antes
+                          ),2) descuento_salida_antes,
                 
                 /*fin descuento por salida antes*/
+
+                /*PARA SACAR LOS MINUTOS*/
+				(CASE WHEN(r.entrada ='-' OR r.salida ='-' ) 
+				THEN((to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24:MI'))::varchar)
+                ELSE((to_char((ji.hora_fin::time-r.salida::time),'HH24:MI'))::varchar)
+				END)min_dias
+				/*PARA SACAR LOS MINUTOS*/
             
             from empleado e 
             inner join jornada ON e.id = jornada.id_emp

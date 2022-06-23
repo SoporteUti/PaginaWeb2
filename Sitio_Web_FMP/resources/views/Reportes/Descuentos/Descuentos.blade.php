@@ -98,7 +98,6 @@
             </tbody>
 
         </table>
-    <br>
     <h4 align="center">
         INFORME DE DESCUENTOS POR INASISTENCIAS
 
@@ -110,10 +109,12 @@
                 <tr>
                     <th style="text-align: center;">N°</th>
                     <th style="text-align: center">Nombre</th>
-                    <th style="text-align: center">Dias del mes</th>
                     <th style="text-align: center">Jornadas</th>
-                    <th style="text-align: center">Horas</th>
-                    <th style="text-align: center">Minutos</th>
+                    <th style="text-align: center">Dias del mes</th>
+                    <th style="text-align: center">Horas por dia</th>
+                    <th style="text-align: center">Estado</th>
+                    <th style="text-align: center">Horas totales</th>
+                    <th style="text-align: center">Minutos totales</th>
                     <th style="text-align: center">Descuento($)</th>
                 </tr>
             </thead>
@@ -130,8 +131,10 @@
                         <tr>
                             <td style="text-align: center;">{{$i}}</td>
                             <td style="text-align: center;">{{ $ina->nombre}}</td>
-                            <td style="text-align: center;">{{ $ina->dia_mes }}</td>
                             <td style="text-align: center;">{{ $ina->jornadas}}</td>
+                            <td style="text-align: center;">{{ $ina->dia_mes }}</td>
+                            <td style="text-align: center;">{{ $ina->horas_dias }}</td>
+                            <td style="text-align: center;">{{ $ina->solvente }}</td> 
                             <td style="text-align: center;">{{ $ina->hrs_inasis}}</td>
                             <td style="text-align: center;">{{ $ina->minutos}}</td>
 
