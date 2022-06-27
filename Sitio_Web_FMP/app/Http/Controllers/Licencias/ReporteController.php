@@ -135,7 +135,7 @@ class ReporteController extends Controller
         and ji.dia=r.dia_semana and ji.hora_inicio::time+'00:05' < r.entrada::time
         and  to_char(r.fecha::date,'YYYY')::int=" . $request->anio . "
         and to_char(r.fecha::date,'MM')::int=" . $request->mes . " and r.entrada !='-'
-        GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin,r.gracia order by e.nombre, r.fecha) des 
+        GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin,r.gracia order by r.fecha) des 
         GROUP BY des.nombre,des.salario,des.jornada";
 
         $query = trim($query);
