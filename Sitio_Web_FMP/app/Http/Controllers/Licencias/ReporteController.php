@@ -1528,7 +1528,10 @@ class ReporteController extends Controller
 
 
         $pdf = PDF::loadView('Reportes.Descuentos.DescuentoPersonal', compact('empleadito', 'request', 'reloj', 'descuento_inasistencia', 'descuento_sin_gose'));
-        return $pdf->setPaper('A4', 'Landscape')->download('Descuento personal.pdf');
+        foreach ($empleadito as $em){
+            $nombre=$em->nombre.' '.$em->apellido.' '.$mes.' '.$request->des_anio;
+        }
+        return $pdf->setPaper('A4', 'Landscape')->download('Descuento '.$nombre.'.pdf');
     }
 
     //FIN DE GENERAR ASISTENCIA MENUAL PARA EMPLEADOS
