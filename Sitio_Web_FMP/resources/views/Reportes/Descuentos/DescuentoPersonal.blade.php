@@ -127,8 +127,6 @@
 
                 </tr>
             @endforeach
-
-         
             <tr>
                 <th style="text-align: center"  >{{''}}</th>
                 <th style="text-align: center" >{{'        '}}</th>
@@ -202,6 +200,7 @@
                 @endphp
                 <tr>
                     <td style="text-align: center;">{{ $i }}</td>
+                   
                     <td style="text-align: center;">{{ Carbon\Carbon::parse(strtotime($di->fecha))->formatLocalized('%d/%B/%Y') }}</td>
                     <td style="text-align: center;">{{ $di->entrada }}</td>
                     <td style="text-align: center;">{{ $di->salida }}</td>
@@ -299,6 +298,7 @@
                 @endphp
                 <tr>
                     <td style="text-align: center;">{{ $i }}</td>
+                  
                     <td style="text-align: center;">{{ Carbon\Carbon::parse(strtotime($sg->fecha))->formatLocalized('%d/%B/%Y') }}</td>
                     <td style="text-align: center;">{{ $sg->hora_inicio }}</td>
                     <td style="text-align: center;">{{ $sg->hora_final  }}</td>

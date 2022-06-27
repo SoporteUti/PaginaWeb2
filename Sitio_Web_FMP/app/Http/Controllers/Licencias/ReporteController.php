@@ -942,6 +942,8 @@ class ReporteController extends Controller
 
     //FIN DE GENERAR LA ASISTENCIA
 
+
+
     //PARA GENERAR EL DESCUENTO  EN PDF
     public function DescuentoPersonalPDF(Request $request)
     {
@@ -1048,47 +1050,9 @@ class ReporteController extends Controller
         $reloj = DB::select($query);
         //PARA LOS DESCUENTOS DETALLADO POR EMPLEADO
         $query_inasistencia_per = " select
-        /*calculo por horas*/
-        (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                THEN
-                ((CASE WHEN (r.entrada='-' AND r.salida !='-') THEN 
-                ('00:00') else ('00:00')
-                 END)) 
-                 else ((CASE WHEN (r.entrada='-' AND r.salida !='-') THEN 
-                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24:MI')) else ('00:00')
-                 END)) END) inas_entrada,
-             
-        (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                THEN
-                ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                ('00:00') else ('00:00')
-                 END)) 
-                 else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24:MI')) else ('00:00')
-                 END)) END) inas_salida,
-             
-        (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                inner join empleado ON empleado.id = permisos.empleado
-                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                THEN
-                ((CASE WHEN (r.entrada ='-' AND r.salida ='-') THEN 
-                ('00:00') else ('00:00')
-                 END)) 
-                 else ((CASE WHEN (r.entrada ='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24:MI')) else ('00:00')
-                 END)) END) inas_entrada_salida,
-             
-        (CASE WHEN (r.entrada !='-' AND r.salida !='-' AND r.salida<ji.hora_fin) THEN 
-        (to_char(ji.hora_fin::time-r.salida::time,'HH24:MI')) else ('00:00')
-         end)inas_salida_antes,
-             
-        /*fin calculo por horas*/
+       
 
-        e.nombre as em, e.apellido as ap,r.entrada, r.salida,to_char(r.fecha::date,'DD') fecha,
+        e.nombre as em, e.apellido as ap,r.entrada, r.salida,r.fecha::date,
         /*agregando detalle*/
         (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
@@ -1551,17 +1515,6 @@ class ReporteController extends Controller
     public function AsistenciaPersonalEmpleadoPDF(Request $request)
     {
 
-        /* $permisos = Permiso::selectRaw('tipo_permiso, fecha_uso,fecha_presentacion,hora_inicio,hora_final,justificacion,permisos.estado,
-                observaciones,olvido,empleado.nombre,empleado.apellido')
-            ->join('empleado', 'empleado.id', '=', 'permisos.empleado')
-            ->where(
-                function ($query) {
-                    $query->where([
-                        ['permisos.estado', 'like', 'Aceptado'],
-                        ['permisos.empleado', '=', auth()->user()->empleado]
-                    ]);
-                }
-            ); */
         $empleadito = Empleado::selectRaw('nombre, apellido,departamentos.nombre_departamento')
             ->join('departamentos', 'departamentos.id', '=', 'empleado.id_depto')
             ->where('empleado.dui', $request->dui)
@@ -1590,7 +1543,10 @@ class ReporteController extends Controller
 
 
         $pdf = PDF::loadView('Reportes.RelojAsistencia.AsistenciaMensual', compact('empleadito', 'request', 'reloj', 'jornada', 'periodos'));
-        return $pdf->setPaper('A4', 'Landscape')->download('Asistencia Personal.pdf');
+        foreach ($empleadito as $em){
+            $nombre=$em->nombre.' '.$em->apellido;
+        }
+        return $pdf->setPaper('A4', 'Landscape')->download('Asistencia Personal '.$nombre.'.pdf');
     }
     //******************FIN DE GENERAR LA ASISTENCIA POR EMPLEADO** */
 
@@ -1671,7 +1627,10 @@ class ReporteController extends Controller
 
 
         $pdf = PDF::loadView('Reportes.RelojAsistencia.AsistenciaMensual', compact('empleadito', 'request', 'reloj', 'jornada', 'periodos'));
-        return $pdf->setPaper('A4', 'Landscape')->download('Asistencia Personal.pdf');
+        foreach ($empleadito as $em){
+            $nombre=$em->nombre.' '.$em->apellido;
+        }
+        return $pdf->setPaper('A4', 'Landscape')->download('Asistencia '.$nombre.'.pdf');
     }
 
     //FIN DE GENERAR LA ASISTENCIA PARA LOS EMPLEADOS MENSUAL
