@@ -63,10 +63,11 @@
                 <tr>
                     <th style="text-align: center;">N°</th>
                     <th style="text-align: center">Nombre</th>
-                    <th style="text-align: center">Dias del mes</th>
                     <th style="text-align: center">Jornadas</th>
-                    <th style="text-align: center">Minutos</th>
-              
+                    <th style="text-align: center">Días del mes</th>
+                    <th style="text-align: center">Minutos por día</th>
+                    <th style="text-align: center">Estado</th>
+                    <th style="text-align: center">Minutos totales</th>                    
                     <th style="text-align: center">Descuento($)</th>
                 </tr>
             </thead>
@@ -83,11 +84,11 @@
                         <tr>
                             <td style="text-align: center;">{{$i}}</td>
                             <td style="text-align: center;">{{ $item->nombre}}</td>
-                            <td style="text-align: center;">{{ $item->dias }}</td>
                             <td style="text-align: center;">{{ $item->jornada}}</td>
+                            <td style="text-align: center;">{{ $item->dias }}</td>
+                            <td style="text-align: center;">{{ $item->minutos }}</td>
+                            <td style="text-align: center;">{{ $item->solvente }}</td>
                             <td style="text-align: center;">{{ $item->minutossimples}}</td>
-                       
-
                             <td style="text-align: center;">{{'$'}}{{$item->descuentos}}</td>
                            
                         </tr>
@@ -110,8 +111,8 @@
                     <th style="text-align: center;">N°</th>
                     <th style="text-align: center">Nombre</th>
                     <th style="text-align: center">Jornadas</th>
-                    <th style="text-align: center">Dias del mes</th>
-                    <th style="text-align: center">Horas por dia</th>
+                    <th style="text-align: center">Días del mes</th>
+                    <th style="text-align: center">Horas por día</th>
                     <th style="text-align: center">Estado</th>
                     <th style="text-align: center">Horas totales</th>
                     <th style="text-align: center">Minutos totales</th>
@@ -162,7 +163,7 @@
         <thead>
             <tr>
                 <th style="text-align: center">N°</th>
-                <th style="text-align: center">Dias del Mes</th>       
+                <th style="text-align: center">Días del Mes</th>       
                 <th style="text-align: center">Jornada</th>
                 <th style="text-align: center">Total Minutos</th>
                 <th style="text-align: center">Descuento($)</th>

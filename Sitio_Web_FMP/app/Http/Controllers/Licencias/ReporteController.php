@@ -86,7 +86,7 @@ class ReporteController extends Controller
             ->get();
 
         $query = "select des.nombre, des.salario,string_agg(des.fecha,', ') dias, string_agg(des.jornada::varchar,', ' ) jornada, sum(des.minutosSimples) minutosSimples,
-        sum(des.descuento) descuentos
+        sum(des.descuento) descuentos,string_agg(des.minutosSimples::varchar,', ')minutos,string_agg(des.solvente,', ') solvente
         from (
             select e.id,to_char((r.entrada::time-ji.hora_inicio::time)-r.gracia::time,'HH24:MI:SS') hrs_input,/**/
 
@@ -132,7 +132,7 @@ class ReporteController extends Controller
         inner join reloj_datos r on e.dui=r.id_persona
         where e.id_depto=" . $request->id_depto . " and e.dui=r.id_persona
         and jornada.procedimiento='aceptado' and periodos.estado='activo'
-        and ji.dia=r.dia_semana and ji.hora_inicio::time+'00:05:59' < r.entrada::time
+        and ji.dia=r.dia_semana and ji.hora_inicio::time+'00:05' < r.entrada::time
         and  to_char(r.fecha::date,'YYYY')::int=" . $request->anio . "
         and to_char(r.fecha::date,'MM')::int=" . $request->mes . " and r.entrada !='-'
         GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin,r.gracia order by e.nombre, r.fecha) des 
