@@ -1150,7 +1150,7 @@ class ReporteController extends Controller
                 ('0') else ('0')
                  END)) 
                  else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-r.entrada::time),'HH24')) else ('0')
+                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')) else ('0')
                  END)) END)::integer*60 --horas/minutos
         +
         (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
@@ -1161,7 +1161,7 @@ class ReporteController extends Controller
                 ('0') else ('0')
                  END)) 
                  else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-r.entrada::time),'MI')) else ('0')
+                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')) else ('0')
                  END)) END)::integer --minutos
         +
         ROUND((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
@@ -1172,7 +1172,7 @@ class ReporteController extends Controller
                 ('0') else ('0')
                  END)) 
                  else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-r.entrada::time),'SS')) else ('0')
+                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'SS')) else ('0')
                  END)) END)::numeric*60/3600,2) minutos_salida,
         
         /*fin minutos salida*/
@@ -1191,7 +1191,7 @@ class ReporteController extends Controller
                 ('0') else ('0')
                  END)) 
                  else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-r.entrada::time),'HH24')) else ('0')
+                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')) else ('0')
                  END)) END)::integer*60 --horas/minutos
         +
         (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
@@ -1202,7 +1202,7 @@ class ReporteController extends Controller
                 ('0') else ('0')
                  END)) 
                  else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-r.entrada::time),'MI')) else ('0')
+                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')) else ('0')
                  END)) END)::integer --minutos
         +
         ROUND((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
@@ -1213,7 +1213,7 @@ class ReporteController extends Controller
                 ('0') else ('0')
                  END)) 
                  else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-r.entrada::time),'SS')) else ('0')
+                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'SS')) else ('0')
                  END)) END)::numeric*60/3600,2)
             
             )     
