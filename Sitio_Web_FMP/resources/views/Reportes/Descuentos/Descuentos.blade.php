@@ -99,6 +99,7 @@
             </tbody>
 
         </table>
+        <br>
     <h4 align="center">
         INFORME DE DESCUENTOS POR INASISTENCIAS
 
