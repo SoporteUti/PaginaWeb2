@@ -61,7 +61,7 @@ class ReporteController extends Controller
             $mes = 'Julio';
             $dias = 31;
         } elseif ($request->mes == '8') {
-            $mes = 'gosto';
+            $mes = 'Agosto';
             $dias = 31;
         } elseif ($request->mes == '9') {
             $mes = 'Septiembre';
@@ -637,7 +637,10 @@ class ReporteController extends Controller
         //echo dd($todosDescuentos);
 
         $pdf = PDF::loadView('Reportes.Descuentos.Descuentos', compact('departamento', 'empleados', 'todosDescuentos', 'request', 'mes', 'dias', 'todosDescuentos_inasistencia', 'sin_gose'));
-        return $pdf->setPaper('A4', 'Landscape')->download('Descuentos '.$departamento->nombre_departamento.'.pdf');
+        foreach ($departamento as $r){
+            $nombre= $r->nombre_departamento;
+        }
+        return $pdf->setPaper('A4', 'Landscape')->download('Descuentos '.$nombre.' '.$mes.' '.$request->anio.'.pdf');
     }
 
 
