@@ -637,7 +637,7 @@ class ReporteController extends Controller
         //echo dd($todosDescuentos);
 
         $pdf = PDF::loadView('Reportes.Descuentos.Descuentos', compact('departamento', 'empleados', 'todosDescuentos', 'request', 'mes', 'dias', 'todosDescuentos_inasistencia', 'sin_gose'));
-        return $pdf->setPaper('A4', 'Landscape')->download('Descuentos.pdf');
+        return $pdf->setPaper('A4', 'Landscape')->download('Descuentos '.$departamento->nombre_departamento.'.pdf');
     }
 
 
@@ -1525,7 +1525,7 @@ class ReporteController extends Controller
 
 
         $pdf = PDF::loadView('Reportes.Descuentos.DescuentoPersonal', compact('empleadito', 'request', 'reloj', 'descuento_inasistencia', 'descuento_sin_gose'));
-        return $pdf->setPaper('A4', 'Landscape')->download('Descuentos.pdf');
+        return $pdf->setPaper('A4', 'Landscape')->download('Descuento personal.pdf');
     }
 
     //FIN DE GENERAR ASISTENCIA MENUAL PARA EMPLEADOS
