@@ -280,7 +280,7 @@ class ReporteController extends Controller
                 /*fin descuento entrada*/
         
                 
-                            /*minutos salida*/
+                 /*minutos salida*/
                 (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                         inner join empleado ON empleado.id = permisos.empleado
                         where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
@@ -300,7 +300,7 @@ class ReporteController extends Controller
                         ('0') else ('0')
                          END)) 
                          else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                        (to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')) else ('0')
+                        (to_char((ji.hora_fin::time-r.entrada::time),'MI')) else ('0')
                          END)) END)::integer --minutos
                 +
                 ROUND((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
@@ -311,7 +311,7 @@ class ReporteController extends Controller
                         ('0') else ('0')
                          END)) 
                          else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                        (to_char((ji.hora_fin::time-ji.hora_inicio::time),'SS')) else ('0')
+                        (to_char((ji.hora_fin::time-r.entrada::time),'SS')) else ('0')
                          END)) END)::numeric*60/3600,2) minutos_salida,
                 
                 /*fin minutos salida*/
@@ -320,8 +320,9 @@ class ReporteController extends Controller
                      
                 ROUND(( 
                               ((e.salario/" . $dias . ")/(to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
-                              to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric * --por minutos
-                    (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                              to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric  * --por minutos
+					(
+						 (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                         inner join empleado ON empleado.id = permisos.empleado
                         where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                         THEN
@@ -329,7 +330,7 @@ class ReporteController extends Controller
                         ('0') else ('0')
                          END)) 
                          else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                        (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')) else ('0')
+                        (to_char((ji.hora_fin::time-r.entrada::time),'HH24')) else ('0')
                          END)) END)::integer*60 --horas/minutos
                 +
                 (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
@@ -340,7 +341,7 @@ class ReporteController extends Controller
                         ('0') else ('0')
                          END)) 
                          else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                        (to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')) else ('0')
+                        (to_char((ji.hora_fin::time-r.entrada::time),'MI')) else ('0')
                          END)) END)::integer --minutos
                 +
                 ROUND((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
@@ -351,10 +352,10 @@ class ReporteController extends Controller
                         ('0') else ('0')
                          END)) 
                          else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                        (to_char((ji.hora_fin::time-ji.hora_inicio::time),'SS')) else ('0')
-                         END)) END)::numeric*60/3600,3)
-                    
-                               
+                        (to_char((ji.hora_fin::time-r.entrada::time),'SS')) else ('0')
+                         END)) END)::numeric*60/3600,2)
+					
+					)     
                           ),2) descuento_salida,
                      
                 /*fin descuento salida*/
@@ -1043,12 +1044,59 @@ class ReporteController extends Controller
 
         $reloj = DB::select($query);
         //PARA LOS DESCUENTOS DETALLADO POR EMPLEADO
-        $query_inasistencia_per = "select
-        e.nombre as em, e.apellido as ap,r.entrada, r.salida,r.fecha,
+        $query_inasistencia_per = " select
+        /*calculo por horas*/
+        (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                inner join empleado ON empleado.id = permisos.empleado
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+                THEN
+                ((CASE WHEN (r.entrada='-' AND r.salida !='-') THEN 
+                ('00:00') else ('00:00')
+                 END)) 
+                 else ((CASE WHEN (r.entrada='-' AND r.salida !='-') THEN 
+                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24:MI')) else ('00:00')
+                 END)) END) inas_entrada,
+             
+        (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                inner join empleado ON empleado.id = permisos.empleado
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+                THEN
+                ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
+                ('00:00') else ('00:00')
+                 END)) 
+                 else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
+                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24:MI')) else ('00:00')
+                 END)) END) inas_salida,
+             
+        (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                inner join empleado ON empleado.id = permisos.empleado
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+                THEN
+                ((CASE WHEN (r.entrada ='-' AND r.salida ='-') THEN 
+                ('00:00') else ('00:00')
+                 END)) 
+                 else ((CASE WHEN (r.entrada ='-' AND r.salida ='-') THEN 
+                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24:MI')) else ('00:00')
+                 END)) END) inas_entrada_salida,
+             
+        (CASE WHEN (r.entrada !='-' AND r.salida !='-' AND r.salida<ji.hora_fin) THEN 
+        (to_char(ji.hora_fin::time-r.salida::time,'HH24:MI')) else ('00:00')
+         end)inas_salida_antes,
+             
+        /*fin calculo por horas*/
+
+        e.nombre as em, e.apellido as ap,r.entrada, r.salida,to_char(r.fecha::date,'DD') fecha,
+        /*agregando detalle*/
+        (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                inner join empleado ON empleado.id = permisos.empleado
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+        THEN('Solventó') 
+        else ('Deficit') end) solvente,
+            /*Agregando detalle*/
          to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
           ROUND(to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60,2) jornada,
         e.salario,
-		/*-- calculo de minutos entrada--*/
+        /*-- calculo de minutos entrada--*/
         (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
@@ -1125,8 +1173,8 @@ class ReporteController extends Controller
                   ),2) descuento_entrada,
         /*fin descuento entrada*/
 
-		
-			        /*minutos salida*/
+        
+         /*minutos salida*/
         (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
@@ -1146,7 +1194,7 @@ class ReporteController extends Controller
                 ('0') else ('0')
                  END)) 
                  else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')) else ('0')
+                (to_char((ji.hora_fin::time-r.entrada::time),'MI')) else ('0')
                  END)) END)::integer --minutos
         +
         ROUND((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
@@ -1157,7 +1205,7 @@ class ReporteController extends Controller
                 ('0') else ('0')
                  END)) 
                  else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'SS')) else ('0')
+                (to_char((ji.hora_fin::time-r.entrada::time),'SS')) else ('0')
                  END)) END)::numeric*60/3600,2) minutos_salida,
         
         /*fin minutos salida*/
@@ -1166,8 +1214,9 @@ class ReporteController extends Controller
              
         ROUND(( 
                       ((e.salario/" . $dias . ")/(to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
-                      to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric * --por minutos
-            (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                      to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric  * --por minutos
+            (
+                 (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
                 THEN
@@ -1175,7 +1224,7 @@ class ReporteController extends Controller
                 ('0') else ('0')
                  END)) 
                  else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')) else ('0')
+                (to_char((ji.hora_fin::time-r.entrada::time),'HH24')) else ('0')
                  END)) END)::integer*60 --horas/minutos
         +
         (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
@@ -1186,7 +1235,7 @@ class ReporteController extends Controller
                 ('0') else ('0')
                  END)) 
                  else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')) else ('0')
+                (to_char((ji.hora_fin::time-r.entrada::time),'MI')) else ('0')
                  END)) END)::integer --minutos
         +
         ROUND((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
@@ -1197,10 +1246,10 @@ class ReporteController extends Controller
                 ('0') else ('0')
                  END)) 
                  else ((CASE WHEN (r.entrada !='-' AND r.salida ='-') THEN 
-                (to_char((ji.hora_fin::time-ji.hora_inicio::time),'SS')) else ('0')
-                 END)) END)::numeric*60/3600,3)
+                (to_char((ji.hora_fin::time-r.entrada::time),'SS')) else ('0')
+                 END)) END)::numeric*60/3600,2)
             
-                       
+            )     
                   ),2) descuento_salida,
              
         /*fin descuento salida*/
@@ -1208,32 +1257,32 @@ class ReporteController extends Controller
        
         
         /*minutos entrada-salida*/
-		CASE WHEN ((select count(fecha_uso) permiso_fecha from permisos
+        CASE WHEN ((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and permisos.tipo_permiso='Const. olvido')>=2)
-		THEN('0')
-		ELSE(
+        THEN('0')
+        ELSE(
         /*MINUTOS PARA LA LICENCIA CON GOSE*/
         (CASE WHEN(r.entrada ='-' AND r.salida ='-' AND (select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and (permisos.tipo_permiso='LC/GS' OR permisos.tipo_permiso='LS/GS'))>0)
                 THEN
                 (/*MODIFICACION EN EL CASO QUE NO MARQUE BIEN EL RELOJ*/	
-				select (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::integer*60 +
+                select (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::integer*60 +
                  to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::integer)-
-					(to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
+                    (to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
                  to_char((permisos.hora_final-permisos.hora_inicio),'MI')::integer) from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and permisos.tipo_permiso='LC/GS')::varchar
                  else (/*else*/
-				(CASE WHEN (r.entrada ='-' AND r.salida ='-') THEN 
+                (CASE WHEN (r.entrada ='-' AND r.salida ='-') THEN 
                 ((to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::integer*60 +
                  to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::integer)::varchar)else('0') 
                  END)
-				 )/*FIN ELSE*/ END)::integer--minutos
-			
-		/*FIN DE MINUTOS PARA LA LICENCIA CON GOSE*/
-		)END
+                 )/*FIN ELSE*/ END)::integer--minutos
+            
+        /*FIN DE MINUTOS PARA LA LICENCIA CON GOSE*/
+        )END
          minutos_entrada_salida,
              
         /*fin de minutos entrada-salida*/
@@ -1242,75 +1291,75 @@ class ReporteController extends Controller
         ROUND(( 
                       ((e.salario/" . $dias . ")/(to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
                       to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric * --por minutos
-			(CASE WHEN ((select count(fecha_uso) permiso_fecha from permisos
+            (CASE WHEN ((select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and permisos.tipo_permiso='Const. olvido')>=2)
-		THEN('0')
-		ELSE(
+        THEN('0')
+        ELSE(
         /*MINUTOS PARA LA LICENCIA CON GOSE*/
         (CASE WHEN(r.entrada ='-' AND r.salida ='-' AND (select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and (permisos.tipo_permiso='LC/GS' OR permisos.tipo_permiso='LC/GS'))>0)
                 THEN
                 (/*MODIFICACION EN EL CASO QUE NO MARQUE BIEN EL RELOJ*/	
-				select (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::integer*60 +
+                select (to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::integer*60 +
                  to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::integer)-
-					(to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
+                    (to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
                  to_char((permisos.hora_final-permisos.hora_inicio),'MI')::integer) from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and (permisos.tipo_permiso='LC/GS' OR permisos.tipo_permiso='LC/GS'))::varchar
                  else (/*else*/
-				(CASE WHEN (r.entrada ='-' AND r.salida ='-') THEN 
+                (CASE WHEN (r.entrada ='-' AND r.salida ='-') THEN 
                 ((to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::integer*60 +
                  to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::integer)::varchar)else('0') 
                  END)
-				 )/*FIN ELSE*/ END)::integer--minutos
-			
-		/*FIN DE MINUTOS PARA LA LICENCIA CON GOSE*/
-		)END
-			)
+                 )/*FIN ELSE*/ END)::integer--minutos
+            
+        /*FIN DE MINUTOS PARA LA LICENCIA CON GOSE*/
+        )END
+            )
             
                        
                   ),2) descuento_entrada_salida,
              
         /*fin de descuento entrada salida*/
-		
-		  /*minutos salida antes*/
-		  
-		(CASE WHEN (r.entrada !='-' AND r.salida !='-' AND (select count(fecha_uso) permiso_fecha from permisos
+        
+          /*minutos salida antes*/
+          
+        (CASE WHEN (r.entrada !='-' AND r.salida !='-' AND (select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and (permisos.tipo_permiso='LC/GS' OR permisos.tipo_permiso='LS/GS'))>0) 
-		 THEN 
+         THEN 
         (
-		case when ((select (to_char((ji.hora_fin::time-r.salida::time),'HH24')::integer*60 +
+        case when ((select (to_char((ji.hora_fin::time-r.salida::time),'HH24')::integer*60 +
                  to_char((ji.hora_fin::time-r.salida::time),'MI')::integer)-
-					(to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
+                    (to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
                  to_char((permisos.hora_final-permisos.hora_inicio),'MI')::integer)from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and (permisos.tipo_permiso='LC/GS' OR permisos.tipo_permiso='LC/GS'))>0)
-			then(
-				select (to_char((ji.hora_fin::time-r.salida::time),'HH24')::integer*60 +
+            then(
+                select (to_char((ji.hora_fin::time-r.salida::time),'HH24')::integer*60 +
                  to_char((ji.hora_fin::time-r.salida::time),'MI')::integer)-
-			 (to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
+             (to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
                  to_char((permisos.hora_final-permisos.hora_inicio),'MI')::integer)from permisos
-					
+                    
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and (permisos.tipo_permiso='LC/GS' OR permisos.tipo_permiso='LC/GS')
-				/**/
-			)
-			else(
-			select (to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
+                /**/
+            )
+            else(
+            select (to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
                  to_char((permisos.hora_final-permisos.hora_inicio),'MI')::integer)-
-			(to_char((ji.hora_fin::time-r.salida::time),'HH24')::integer*60 +
+            (to_char((ji.hora_fin::time-r.salida::time),'HH24')::integer*60 +
                  to_char((ji.hora_fin::time-r.salida::time),'MI')::integer)
-				from permisos	
+                from permisos	
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and (permisos.tipo_permiso='LC/GS' OR permisos.tipo_permiso='LC/GS')
-			
-			)end
-		
-		) ELSE (
-		
+            
+            )end
+        
+        ) ELSE (
+        
        ((CASE WHEN (r.entrada !='-' AND r.salida !='-' AND r.salida<ji.hora_fin ) THEN 
         (to_char(ji.hora_fin::time-r.salida::time,'HH24')) else ('0')
          end)::integer*60 --horas/minutos
@@ -1322,7 +1371,7 @@ class ReporteController extends Controller
         ROUND((CASE WHEN (r.entrada !='-' AND r.salida !='-' AND r.salida<ji.hora_fin) THEN 
         (to_char(ji.hora_fin::time-r.salida::time,'SS')) else ('0')
          end)::numeric*60/3600,2) )
-		) END )minutos_salida_antes,
+        ) END )minutos_salida_antes,
         /*fin de minutos salida antes*/
         
         /*descuento por salida antes*/
@@ -1332,37 +1381,37 @@ class ReporteController extends Controller
         ((CASE WHEN (r.entrada !='-' AND r.salida !='-' AND (select count(fecha_uso) permiso_fecha from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and (permisos.tipo_permiso='LC/GS' OR permisos.tipo_permiso='LS/GS'))>0) 
-		 THEN 
+         THEN 
         (
-		case when ((select (to_char((ji.hora_fin::time-r.salida::time),'HH24')::integer*60 +
+        case when ((select (to_char((ji.hora_fin::time-r.salida::time),'HH24')::integer*60 +
                  to_char((ji.hora_fin::time-r.salida::time),'MI')::integer)-
-					(to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
+                    (to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
                  to_char((permisos.hora_final-permisos.hora_inicio),'MI')::integer)from permisos
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and (permisos.tipo_permiso='LC/GS' OR permisos.tipo_permiso='LC/GS'))>0)
-			then(
-				select (to_char((ji.hora_fin::time-r.salida::time),'HH24')::integer*60 +
+            then(
+                select (to_char((ji.hora_fin::time-r.salida::time),'HH24')::integer*60 +
                  to_char((ji.hora_fin::time-r.salida::time),'MI')::integer)-
-			 (to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
+             (to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
                  to_char((permisos.hora_final-permisos.hora_inicio),'MI')::integer)from permisos
-					
+                    
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and (permisos.tipo_permiso='LC/GS' OR permisos.tipo_permiso='LC/GS')
-				/**/
-			)
-			else(
-			select (to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
+                /**/
+            )
+            else(
+            select (to_char((permisos.hora_final-permisos.hora_inicio),'HH24')::integer*60 +
                  to_char((permisos.hora_final-permisos.hora_inicio),'MI')::integer)-
-			(to_char((ji.hora_fin::time-r.salida::time),'HH24')::integer*60 +
+            (to_char((ji.hora_fin::time-r.salida::time),'HH24')::integer*60 +
                  to_char((ji.hora_fin::time-r.salida::time),'MI')::integer)
-				from permisos	
+                from permisos	
                 inner join empleado ON empleado.id = permisos.empleado
                 where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado' and (permisos.tipo_permiso='LC/GS' OR permisos.tipo_permiso='LC/GS')
-			
-			)end
-		
-		) ELSE (
-		
+            
+            )end
+        
+        ) ELSE (
+        
        ((CASE WHEN (r.entrada !='-' AND r.salida !='-' AND r.salida<ji.hora_fin ) THEN 
         (to_char(ji.hora_fin::time-r.salida::time,'HH24')) else ('0')
          end)::integer*60 --horas/minutos
@@ -1374,12 +1423,19 @@ class ReporteController extends Controller
         ROUND((CASE WHEN (r.entrada !='-' AND r.salida !='-' AND r.salida<ji.hora_fin) THEN 
         (to_char(ji.hora_fin::time-r.salida::time,'SS')) else ('0')
          end)::numeric*60/3600,2) )
-		) END ))
+        ) END ))
             
                        
-                  ),2) descuento_salida_antes
+                  ),2) descuento_salida_antes,
         
-        /*fin descuento por salida antes*/  
+        /*fin descuento por salida antes*/
+
+        /*PARA SACAR LOS MINUTOS*/
+        (CASE WHEN(r.entrada ='-' OR r.salida ='-' ) 
+        THEN((to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24:MI'))::varchar)
+        ELSE((to_char((ji.hora_fin::time-r.salida::time),'HH24:MI'))::varchar)
+        END)min_dias
+        /*PARA SACAR LOS MINUTOS*/
 	
         from empleado e 
         inner join jornada ON e.id = jornada.id_emp
