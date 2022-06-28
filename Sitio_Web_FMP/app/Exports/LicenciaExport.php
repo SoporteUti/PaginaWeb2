@@ -34,7 +34,7 @@ class LicenciaExport implements FromView
 
         (select (sum(suma.hrs_input::time)- sum(suma.hrs_permisos::time)) hrs_inpunt
          from(
-            select to_char((r.entrada::time-ji.hora_inicio::time)-'00:05','HH24:MI:SS') hrs_input,
+            select to_char((r.entrada::time-ji.hora_inicio::time),'HH24:MI') hrs_input,
            
                    (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                             inner join empleado ON empleado.id = permisos.empleado
