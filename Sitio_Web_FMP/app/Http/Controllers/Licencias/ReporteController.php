@@ -1005,7 +1005,7 @@ class ReporteController extends Controller
             to_char(r.gracia::time,'MI')::numeric end)::integer  minutosSimples,
                   
     
-         TRIM(e.apellido)||' '||TRIM(e.nombre) as nombre, e.salario,r.entrada,to_char(r.fecha::date,'DD') fecha, 
+         TRIM(e.apellido)||' '||TRIM(e.nombre) as nombre, e.salario,r.entrada,r.fecha, 
         to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
           ROUND(to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60,2) jornada,
     
