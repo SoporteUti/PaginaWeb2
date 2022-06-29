@@ -34,7 +34,12 @@ class LicenciaExport implements FromView
 
         (select (sum(suma.hrs_input::time)- sum(suma.hrs_permisos::time)) hrs_inpunt
          from(
-            select to_char((r.entrada::time-ji.hora_inicio::time),'HH24:MI') hrs_input,
+            SELECT CASE WHEN (to_char((r.entrada::time-ji.hora_inicio::time)-'00:05','HH24:MI')::TIME > '00:05')
+			 THEN(
+            select to_char((r.entrada::time-ji.hora_inicio::time),'HH24:MI') hrs_input)
+			 ELSE(
+				 select to_char((r.entrada::time-ji.hora_inicio::time)-'00:05','HH24:MI') hrs_input
+			 ) END,
            
                    (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                             inner join empleado ON empleado.id = permisos.empleado
@@ -45,11 +50,13 @@ class LicenciaExport implements FromView
            
                        from reloj_datos r
                        inner join jornada ON e.id = jornada.id_emp
+                       inner join periodos on periodos.id = jornada.id_periodo
                        inner join jornada_items ji ON ji.id_jornada = jornada.id
                        where e.dui=r.id_persona and ji.hora_inicio::time+'00:05' < r.entrada::time
+                       and jornada.procedimiento='aceptado' and periodos.estado='activo'
                        and ji.dia=r.dia_semana 
                        and  to_char(r.fecha::date,'YYYY')::int=" . $this->anio . "
-                       and to_char(r.fecha::date,'MM')::int=" . $this->mes . " and r.entrada !='-' and r.salida !='-'
+                       and to_char(r.fecha::date,'MM')::int=" . $this->mes . " and r.entrada !='-'
                        GROUP BY  e.nombre,r.entrada,r.fecha,r.salida,ji.hora_inicio,ji.hora_fin) suma),
 
                        (select (sum(pivot.inas_entrada::time)+ sum(pivot.inas_salida::time)+sum(pivot.inas_entrada_salida::time)+sum(pivot.inas_salida_antes::time)) hrs_inasis
@@ -190,9 +197,12 @@ class LicenciaExport implements FromView
 
         $query = trim($query);
 
-        $permisos_mensual = DB::select($query);
 
-        //echo dd($permisos_mensual)
+        $permisos_mensual = DB::select($query);
+        //echo dd($permisos_mensual);
+
+
+
 
         $depto = DB::table('departamentos')
             ->select('nombre_departamento')
