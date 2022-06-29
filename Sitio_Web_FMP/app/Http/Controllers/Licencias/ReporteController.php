@@ -20,7 +20,7 @@ class ReporteController extends Controller
     //PARA GENERAR EL PDF DE LOS DESCUENTOS
     public function DescuentosPDF(Request $request)
     {
-     
+
 
         $validator = Validator::make($request->all(), [
             'id_depto'  => 'required',
@@ -88,14 +88,13 @@ class ReporteController extends Controller
         $query = "select des.nombre, des.salario,string_agg(des.fecha,', ') dias, string_agg(des.jornada::varchar,', ' ) jornada, sum(des.minutosSimples) minutosSimples,
         sum(des.descuento) descuentos,string_agg(des.minutosSimples::varchar,', ')minutos,string_agg(des.solvente,', ') solvente
         from (
-            select e.id,to_char((r.entrada::time-ji.hora_inicio::time)-r.gracia::time,'HH24:MI:SS') hrs_input,/**/
+            select e.id,to_char((r.entrada::time-ji.hora_inicio::time)-r.gracia::time,'HH24:MI') hrs_input,/**/
 
             (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
                     inner join empleado ON empleado.id = permisos.empleado
                     where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
             THEN('0') 
-            else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
-                ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
+            else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer)-
                 to_char(r.gracia::time,'MI')::numeric end)::integer  minutosSimples,
          			 
         
@@ -112,8 +111,7 @@ class ReporteController extends Controller
                     inner join empleado ON empleado.id = permisos.empleado
                     where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
             THEN('0') 
-            else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
-                ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
+            else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer)-
                 to_char(r.gracia::time,'MI')::numeric end)::integer))
         
             ),2) descuento,
@@ -637,10 +635,10 @@ class ReporteController extends Controller
         //echo dd($todosDescuentos);
 
         $pdf = PDF::loadView('Reportes.Descuentos.Descuentos', compact('departamento', 'empleados', 'todosDescuentos', 'request', 'mes', 'dias', 'todosDescuentos_inasistencia', 'sin_gose'));
-        foreach ($departamento as $r){
-            $nombre= $r->nombre_departamento;
+        foreach ($departamento as $r) {
+            $nombre = $r->nombre_departamento;
         }
-        return $pdf->setPaper('A4', 'Landscape')->download('Descuentos '.$nombre.' '.$mes.' '.$request->anio.'.pdf');
+        return $pdf->setPaper('A4', 'Landscape')->download('Descuentos ' . $nombre . ' ' . $mes . ' ' . $request->anio . '.pdf');
     }
 
 
@@ -997,42 +995,41 @@ class ReporteController extends Controller
             ->where('empleado.id', $request->_id_des)
             ->get();
 
-        $query = "select e.id,to_char((r.entrada::time-ji.hora_inicio::time)-r.gracia::time,'HH24:MI:SS') hrs_input,/**/
+        $query = "select e.id,to_char((r.entrada::time-ji.hora_inicio::time)-r.gracia::time,'HH24:MI') hrs_input,/**/
 
-                    (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                            inner join empleado ON empleado.id = permisos.empleado
-                            where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                    THEN('0') 
-                    else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
-                        ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
-                        to_char(r.gracia::time,'MI')::numeric end)::integer  minutosSimples,
-            
-            TRIM(e.apellido)||' '||TRIM(e.nombre) as nombre, e.salario,r.entrada,to_char(r.fecha::date,'DD-MM-YYYY') fecha, 
-            to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
-                ROUND(to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60,2) jornada,
-                
+        (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                inner join empleado ON empleado.id = permisos.empleado
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+        THEN('0') 
+        else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer)-
+            to_char(r.gracia::time,'MI')::numeric end)::integer  minutosSimples,
+                  
+    
+         TRIM(e.apellido)||' '||TRIM(e.nombre) as nombre, e.salario,r.entrada,to_char(r.fecha::date,'DD') fecha, 
+        to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
+          ROUND(to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60,2) jornada,
+    
 
-            ROUND(( 
-                ((e.salario/" . $dias . ")/(to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
-                to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric *
-                
-                ( ((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                            inner join empleado ON empleado.id = permisos.empleado
-                            where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                    THEN('0') 
-                    else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer + 
-                        ROUND((to_char(((r.entrada::time-ji.hora_inicio::time)::time),'SS'))::numeric*60/3600,3))-
-                        to_char(r.gracia::time,'MI')::numeric end)::integer))
-                
-            ),2) descuento,
-            /*agregando detalle*/
-            (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
-                            inner join empleado ON empleado.id = permisos.empleado
-                            where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
-                    THEN('Solventó') 
-                    else ('Deficit') end) solvente
+     ROUND(( 
+    ((e.salario/" . $dias . ")/(to_char((ji.hora_fin::time-ji.hora_inicio::time),'HH24')::numeric + 
+    to_char((ji.hora_fin::time-ji.hora_inicio::time),'MI')::numeric/60)/60)::numeric *
+    
+    ( ((CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                inner join empleado ON empleado.id = permisos.empleado
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+        THEN('0') 
+        else ( to_char((r.entrada::time-ji.hora_inicio::time),'HH24')::integer *60+(to_char(((r.entrada::time-ji.hora_inicio::time)::time),'MI'))::integer)-
+            to_char(r.gracia::time,'MI')::numeric end)::integer))
+    
+        ),2) descuento,
+         /*agregando detalle*/
+        (CASE WHEN((select count(fecha_uso) permiso_fecha from permisos
+                inner join empleado ON empleado.id = permisos.empleado
+                where fecha_uso=r.fecha::date and e.id=permisos.empleado and permisos.estado='Aceptado')>0)
+        THEN('Solventó') 
+        else ('Deficit') end) solvente
 
-            /*fin del detalle que corregio*/
+     /*fin del detalle que corregio*/
           from empleado e 
           inner join jornada ON e.id = jornada.id_emp
           inner join periodos on periodos.id = jornada.id_periodo
@@ -1492,10 +1489,10 @@ class ReporteController extends Controller
 
 
         $pdf = PDF::loadView('Reportes.Descuentos.DescuentoPersonal', compact('empleadito', 'request', 'reloj', 'descuento_inasistencia', 'descuento_sin_gose'));
-        foreach ($empleadito as $em){
-            $nombre=$em->nombre.' '.$em->apellido.' '.$mes.' '.$request->des_anio;
+        foreach ($empleadito as $em) {
+            $nombre = $em->nombre . ' ' . $em->apellido . ' ' . $mes . ' ' . $request->des_anio;
         }
-        return $pdf->setPaper('A4', 'Landscape')->download('Descuento '.$nombre.'.pdf');
+        return $pdf->setPaper('A4', 'Landscape')->download('Descuento ' . $nombre . '.pdf');
     }
 
     //FIN DE GENERAR ASISTENCIA MENUAL PARA EMPLEADOS
@@ -1543,10 +1540,10 @@ class ReporteController extends Controller
 
 
         $pdf = PDF::loadView('Reportes.RelojAsistencia.AsistenciaMensual', compact('empleadito', 'request', 'reloj', 'jornada', 'periodos'));
-        foreach ($empleadito as $em){
-            $nombre=$em->nombre.' '.$em->apellido;
+        foreach ($empleadito as $em) {
+            $nombre = $em->nombre . ' ' . $em->apellido;
         }
-        return $pdf->setPaper('A4', 'Landscape')->download('Asistencia Personal '.$nombre.'.pdf');
+        return $pdf->setPaper('A4', 'Landscape')->download('Asistencia Personal ' . $nombre . '.pdf');
     }
     //******************FIN DE GENERAR LA ASISTENCIA POR EMPLEADO** */
 
@@ -1627,10 +1624,10 @@ class ReporteController extends Controller
 
 
         $pdf = PDF::loadView('Reportes.RelojAsistencia.AsistenciaMensual', compact('empleadito', 'request', 'reloj', 'jornada', 'periodos'));
-        foreach ($empleadito as $em){
-            $nombre=$em->nombre.' '.$em->apellido;
+        foreach ($empleadito as $em) {
+            $nombre = $em->nombre . ' ' . $em->apellido;
         }
-        return $pdf->setPaper('A4', 'Landscape')->download('Asistencia '.$nombre.'.pdf');
+        return $pdf->setPaper('A4', 'Landscape')->download('Asistencia ' . $nombre . '.pdf');
     }
 
     //FIN DE GENERAR LA ASISTENCIA PARA LOS EMPLEADOS MENSUAL
