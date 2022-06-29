@@ -130,7 +130,7 @@ class ReporteController extends Controller
         inner join reloj_datos r on e.dui=r.id_persona
         where e.id_depto=" . $request->id_depto . " and e.dui=r.id_persona
         and jornada.procedimiento='aceptado' and periodos.estado='activo'
-        and ji.dia=r.dia_semana and ji.hora_inicio::time+'00:05' < r.entrada::time
+        and ji.dia=r.dia_semana and ji.hora_inicio::time+'00:05:59' < r.entrada::time
         and  to_char(r.fecha::date,'YYYY')::int=" . $request->anio . "
         and to_char(r.fecha::date,'MM')::int=" . $request->mes . " and r.entrada !='-'
         GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin,r.gracia order by r.fecha) des 
@@ -1037,7 +1037,7 @@ class ReporteController extends Controller
           inner join reloj_datos r on e.dui=r.id_persona
           where e.id=" . $request->_id_des . " and e.dui=r.id_persona
           and jornada.procedimiento='aceptado' and periodos.estado='activo'
-          and ji.dia=r.dia_semana and ji.hora_inicio::time+'00:05' < r.entrada::time
+          and ji.dia=r.dia_semana and ji.hora_inicio::time+'00:05:59' < r.entrada::time
           and  to_char(r.fecha::date,'YYYY')::int=" . $request->des_anio . "
           and to_char(r.fecha::date,'MM')::int=" . $request->des_mes . " and r.entrada !='-'
           GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin,r.gracia order by r.fecha";
