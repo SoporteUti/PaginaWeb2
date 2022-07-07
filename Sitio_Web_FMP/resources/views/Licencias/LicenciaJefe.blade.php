@@ -3,7 +3,6 @@
 @section('content')
     @if (!is_null(auth()->user()->empleado) and
         \Illuminate\Support\Facades\DB::table('permisos')->where('jefatura', auth()->user()->empleado)->exists())
-
         <!--modal paraaceptar -->
         <div id="modalAceptar" class="modal fade bs-example-modal-center" tabindex="-1" role="dialog"
             aria-labelledby="myCenterModalLabel" aria-hidden="true" style="display: none;">
@@ -137,8 +136,8 @@
 
         <!--MODAL CONSTANCIA DE OLVIDO DE MARCAJE-->
         <!-- inicio Modal de registro -->
-        <div class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" id="modalConstancia"
-            tabindex="-1">
+        <div class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel"
+            id="modalConstancia" tabindex="-1">
             <div class="modal-dialog modal-lg-8" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -176,7 +175,7 @@
                                     <div class="form-group">
                                         <label for="">Apellido <code>*</code></label>
                                         <input type="text" class="form-control" value="" autocomplete="off"
-                                            placeholder="Digite el apellido" id="apellidoC"  readonly>
+                                            placeholder="Digite el apellido" id="apellidoC" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -229,21 +228,20 @@
                                 <div class="col-xl-12">
                                     <div class="form-group">
                                         <label for="exampleInputNombre">Justificación<code>*</code></label>
-                                        <textarea value=" " class="form-control summernote-config"
-                                            id="justificacionConst" rows="6" readonly></textarea>
+                                        <textarea value=" " class="form-control summernote-config" id="justificacionConst" rows="6" readonly></textarea>
                                     </div>
                                 </div>
                             </div>
-                           <div class="row" id="observaciones_jefatura_ocultar">
-                               <div class="col-xl-12">
-                                <div class="form-group">
-                                    <label for="observacionesConst">Observaciones </label>
-                                    <textarea value=" " class="form-control summernote-config"  name="observaciones_jefatura_constancia"
-                                     rows="4"></textarea>
-                                </div>
+                            <div class="row" id="observaciones_jefatura_ocultar">
+                                <div class="col-xl-12">
+                                    <div class="form-group">
+                                        <label for="observacionesConst">Observaciones </label>
+                                        <textarea value=" " class="form-control summernote-config" name="observaciones_jefatura_constancia"
+                                            rows="4"></textarea>
+                                    </div>
 
-                               </div>
-                           </div> 
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-ban"
@@ -262,8 +260,8 @@
         <!--FIN DE MODAL CONSTANCIA DE OLVIDO DE MARCAJE-->
 
         <!-- inicio Modal de registro -->
-        <div class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" id="modalRegistro"
-            tabindex="-1">
+        <div class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel"
+            id="modalRegistro" tabindex="-1">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -343,8 +341,8 @@
                                                 <span class="input-group-text" id="basic-addon1">
                                                     <i class="mdi mdi-clock-outline"></i>
                                                 </span>
-                                                <input type="text" name="" value="Ilimitado" class="form-control"
-                                                    style="width: 100%" id="hora_anual" readonly>
+                                                <input type="text" name="" value="Ilimitado"
+                                                    class="form-control" style="width: 100%" id="hora_anual" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -434,15 +432,15 @@
                                 <div class="col-xl-6">
                                     <div class="form-group">
                                         <label for="justificacion">Justificación </label>
-                                        <textarea value=" " class="form-control summernote-config" name="justificación"
-                                            id="justificacion" rows="4" readonly></textarea>
+                                        <textarea value=" " class="form-control summernote-config" name="justificación" id="justificacion"
+                                            rows="4" readonly></textarea>
                                     </div>
                                 </div>
                                 <div class="col-xl-6">
                                     <div class="form-group">
                                         <label for="observaciones">Observaciones </label>
-                                        <textarea value=" " class="form-control summernote-config" name="observaciones"
-                                            id="observaciones" rows="4" readonly></textarea>
+                                        <textarea value=" " class="form-control summernote-config" name="observaciones" id="observaciones"
+                                            rows="4" readonly></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -450,8 +448,7 @@
                                 <div class="col-xl-12">
                                     <div class="form-group">
                                         <label for="observaciones">Observaciones Jefatura <code>*</code></label>
-                                        <textarea value=" " class="form-control summernote-config"
-                                            name="observaciones_jefatura"  rows="4"></textarea>
+                                        <textarea value=" " class="form-control summernote-config" name="observaciones_jefatura" rows="4"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -516,7 +513,7 @@
                             @foreach ($permisos as $item)
                                 <tr>
                                     <th class="align-middle ">
-                                        {{ Carbon\Carbon::parse($item->fecha_uso)->format('d/M/Y') }}</th>
+                                        {{ Carbon\Carbon::parse($item->fecha_uso)->format('d/m/Y') }}</th>
                                     <td class="align-middle ">{{ $item->nombre . ' ' . $item->apellido }}</td>
                                     <td class="align-middle "><span
                                             class="badge badge-primary">{{ $item->tipo_permiso }}</span></td>
@@ -526,18 +523,19 @@
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_final)) }}</td>
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_final)) }}</td>
 
-                                        @if($item->estado =='Aceptado')
-                                        <td class="align-middle "><span
-                                            class="badge badge-success">{{ $item->estado }}</span></td>
-
+                                        @if ($item->estado == 'Aceptado')
+                                            <td class="align-middle "><span
+                                                    class="badge badge-success">{{ $item->estado }}</span></td>
+                                        @elseif($item->estado == 'Enviado a RRHH')
+                                            <td class="align-middle "><span class="badge badge-danger">Pendiente de
+                                                    Aceptación RRHH</span></td>
                                         @else
-                                        <td class="align-middle "><span
-                                            class="badge badge-danger">Pendiente de Aceptación</span></td>
-                                        
+                                            <td class="align-middle "><span class="badge badge-secondary">Pendiente de
+                                                    Aceptación Jefatura</span></td>
                                         @endif
 
-                                         <!--PARA LOS BOTONES-->
-                                         <td class="align-middle ">
+                                        <!--PARA LOS BOTONES-->
+                                        <td class="align-middle ">
                                             <div class="row">
                                                 <div class="col text-center">
 
@@ -556,8 +554,7 @@
 
                                                         <button title="Aceptar Const. olvido"
                                                             class="btn btn-outline-success btn-sm"
-                                                            @if($item->estado==='Enviado a Jefatura')
-                                                            value="{{ $item->permiso }}" onclick="aceptarConst(this)" @else disabled @endif>
+                                                            @if ($item->estado === 'Enviado a Jefatura') value="{{ $item->permiso }}" onclick="aceptarConst(this)" @else disabled @endif>
                                                             <i class="fa fa-check font-16 my-1" aria-hidden="true"></i>
                                                         </button>
 
@@ -566,18 +563,19 @@
                                             </div>
                                         </td>
                                         <!--FIN DE PARA LOS BOTONES-->
-                                    @elseif ($item->olvido =='Salida')
+                                    @elseif ($item->olvido == 'Salida')
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_final)) }}</td>
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_inicio)) }}</td>
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_final)) }}</td>
-                                        @if($item->estado =='Aceptado')
-                                        <td class="align-middle "><span
-                                            class="badge badge-success">{{ $item->estado }}</span></td>
-
+                                        @if ($item->estado == 'Aceptado')
+                                            <td class="align-middle "><span
+                                                    class="badge badge-success">{{ $item->estado }}</span></td>
+                                        @elseif($item->estado == 'Enviado a RRHH')
+                                            <td class="align-middle "><span class="badge badge-danger">Pendiente de
+                                                    Aceptación RRHH</span></td>
                                         @else
-                                        <td class="align-middle "><span
-                                            class="badge badge-danger">Pendiente de Aceptación</span></td>
-                                        
+                                            <td class="align-middle "><span class="badge badge-secondary">Pendiente de
+                                                    Aceptación Jefatura</span></td>
                                         @endif
 
                                         <!--PARA LOS BOTONES-->
@@ -593,15 +591,15 @@
 
                                                         <button title="Agregar Observacion"
                                                             class="btn btn-outline-primary btn-sm"
-                                                            value="{{ $item->permiso }}" onclick=" verDatosConst(this)">
+                                                            value="{{ $item->permiso }}"
+                                                            onclick=" verDatosConst(this)">
                                                             <i class="fa fa-file-alt font-16 my-1 mx-0"
                                                                 aria-hidden="true"></i>
                                                         </button>
 
                                                         <button title="Aceptar Const. olvido"
                                                             class="btn btn-outline-success btn-sm"
-                                                            @if($item->estado==='Enviado a Jefatura')
-                                                            value="{{ $item->permiso }}" onclick="aceptarConst(this)" @else disabled @endif>
+                                                            @if ($item->estado === 'Enviado a Jefatura') value="{{ $item->permiso }}" onclick="aceptarConst(this)" @else disabled @endif>
                                                             <i class="fa fa-check font-16 my-1" aria-hidden="true"></i>
                                                         </button>
 
@@ -610,21 +608,21 @@
                                             </div>
                                         </td>
                                         <!--FIN DE PARA LOS BOTONES-->
-
                                     @else
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_inicio)) }}</td>
                                         <td class="align-middle ">{{ date('H:i', strtotime($item->hora_final)) }}</td>
                                         <td class="align-middle ">
-                                            {{Carbon\Carbon::parse($item->fecha_uso . 'T' . $item->hora_inicio)->diffAsCarbonInterval(Carbon\Carbon::parse($item->fecha_uso . 'T' . $item->hora_final)) }}
+                                            {{ Carbon\Carbon::parse($item->fecha_uso . 'T' . $item->hora_inicio)->diffAsCarbonInterval(Carbon\Carbon::parse($item->fecha_uso . 'T' . $item->hora_final)) }}
                                         </td>
-                                        @if($item->estado == 'Aceptado')
-                                        <td class="align-middle "><span
-                                            class="badge badge-success">{{ $item->estado }}</span></td>
-
+                                        @if ($item->estado == 'Aceptado')
+                                            <td class="align-middle "><span
+                                                    class="badge badge-success">{{ $item->estado }}</span></td>
+                                        @elseif($item->estado == 'Enviado a RRHH')
+                                            <td class="align-middle "><span class="badge badge-danger">Pendiente de
+                                                    Aceptación RRHH</span></td>
                                         @else
-                                        <td class="align-middle "><span
-                                            class="badge badge-danger">Pendiente de Aceptación</span></td>
-                                        
+                                            <td class="align-middle "><span class="badge badge-secondary">Pendiente de
+                                                    Aceptación Jefatura</span></td>
                                         @endif
                                         <td class="align-middle ">
                                             <div class="row">
@@ -644,7 +642,7 @@
                                                         </button>
                                                         <button title="Aceptar Licencia"
                                                             class="btn btn-outline-success btn-sm"
-                                                            @if($item->estado==='Enviado a Jefatura') value="{{ $item->permiso }}" onclick="aceptar(this)" @else disabled @endif>
+                                                            @if ($item->estado === 'Enviado a Jefatura') value="{{ $item->permiso }}" onclick="aceptar(this)" @else disabled @endif>
                                                             <i class="fa fa-check font-16 my-1" aria-hidden="true"></i>
                                                         </button>
 
@@ -662,7 +660,6 @@
             </div> <!-- end col -->
         </div>
         <!-- end row -->
-
     @else
         <div class="row m-3">
             <div class="col-xl-12">
@@ -696,12 +693,14 @@
     <!-- Bootstrap Select -->
     <script src="{{ asset('template-admin/dist/assets/libs/bootstrap-select/bootstrap-select.min.js') }}"></script>
     <script src="{{ asset('template-admin/dist/assets/libs/select2/select2.min.js') }}"></script>
-    <script src="{{ asset('template-admin/dist/assets/libs/bootstrap-timepicker/bootstrap-timepicker.min.js') }}"></script>
+    <script src="{{ asset('template-admin/dist/assets/libs/bootstrap-timepicker/bootstrap-timepicker.min.js') }}">
+    </script>
     <script src="{{ asset('js/scripts/configuracion.js') }}"></script>
     <script src="{{ asset('js/licencias/calcularHoras.js') }}"></script>
     <script src="{{ asset('js/scripts/data-table.js') }}"></script>
     <script src="{{ asset('js/summernote-bs4.min.js') }}"></script>
     <script src="{{ asset('vendor/summernote/lang/summernote-es-ES.js') }}"></script>
-    <script src="{{ asset('template-admin/dist/assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('template-admin/dist/assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.js') }}">
+    </script>
     <script src="{{ asset('js/licencias/jefatura.js') }}"></script>
 @endsection

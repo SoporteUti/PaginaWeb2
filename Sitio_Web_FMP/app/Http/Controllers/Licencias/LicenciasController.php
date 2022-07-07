@@ -60,7 +60,11 @@ class LicenciasController extends Controller
             if($item->estado =='Cancelado' or $item->estado =='Observaciones de RRHH' or $item->estado =='Observaciones de Jefatura') 
                 $estado = '<span class="badge badge-danger font-13">'.$item->estado.'</span>';
             
-            if ($item->estado =='Enviado a Jefatura' or $item->estado =='Enviado a RRHH' or $item->estado =='Aceptado')
+            if ($item->estado =='Enviado a RRHH')
+                $estado = ' <span class="badge badge-danger font-13">Pendiente de Aceptación RRHH</span>';
+            if($item->estado =='Enviado a Jefatura')
+                $estado = ' <span class="badge badge-secondary font-13">Pendiente de Aceptación Jefatura</span>';
+            if($item->estado =='Aceptado')
                 $estado = ' <span class="badge badge-success font-13">'.$item->estado.'</span>';
             
             $todos_btn = $item->estado =='Guardado' || $item->estado == 'Observaciones de RRHH' || $item->estado == 'Observaciones de Jefatura';
