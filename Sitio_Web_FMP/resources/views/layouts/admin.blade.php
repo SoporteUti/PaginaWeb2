@@ -403,7 +403,7 @@
                                         <a href="{{ route('reporteConst/vista') }}">Constancia Olvido</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('Asistencia/vista') }}">Asistencia Mensual</a>
+                                        <a href="{{ route('Asistencia/vista') }}">Asistencia Mensual Personal</a>
                                     </li>
                                    
                                     
@@ -412,7 +412,7 @@
                                 @endhasrole
                                 @hasanyrole('super-admin|Jefe-Administrativo|Jefe-Academico')
                                     <li>
-                                        <a href="{{ route('reporteMensualesJefes/vista') }}">Remisión Mensuales</a>
+                                        <a href="{{ route('reporteMensualesJefes/vista') }}">Remisión Mensuales Jefe</a>
                                     </li>
                                 @endhasrole
                                 <li>
