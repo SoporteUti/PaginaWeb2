@@ -403,7 +403,7 @@
                                         <a href="{{ route('reporteConst/vista') }}">Constancia Olvido</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('Asistencia/vista') }}">Asistencia Mensual Personal</a>
+                                        <a href="{{ route('Asistencia/vista') }}">Asistencia Mensual de Personal</a>
                                     </li>
                                    
                                     
