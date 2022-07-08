@@ -1462,8 +1462,6 @@ class ReporteController extends Controller
     public function mostrarTablaAsistencia($mes, $anio)
     {
 
-     
-
             $query="select r.fecha,r.dia_semana,r.entrada,r.salida,
             case when (r.entrada='-' or r.salida='-')
             then(
@@ -1502,7 +1500,7 @@ class ReporteController extends Controller
 
         //->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio);
 
-        echo dd($datos);
+       // echo dd($datos);
 
         foreach ($datos as $item) {
             # code...
