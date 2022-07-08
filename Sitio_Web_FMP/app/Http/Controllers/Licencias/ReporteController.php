@@ -1520,7 +1520,7 @@ class ReporteController extends Controller
              else
              $row3= '<span class="badge badge-secondary font-13">'.$item->permisos.'</span>';
 
-            $data = array(
+            $data[] = array(
                 "row0" =>  $row0,
                 "row1" => $item->dia_semana,
                 "row2" => $item->entrada,
