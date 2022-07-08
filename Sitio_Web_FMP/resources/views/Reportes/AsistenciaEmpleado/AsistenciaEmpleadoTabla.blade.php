@@ -11,7 +11,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="myCenterModalLabel">
-                    <i class="fa fa-calculator mdi-36px" style="margin: 0px;"></i>  Descuentos</h3>
+                    <i class="fa fa-bell mdi-36px" style="margin: 0px;"></i>  Impuntualidad</h3>
                 
             </div>
             <form action="{{ route('Reporte/Asistencia') }}" method="POST" id="Impuntual">    
@@ -63,7 +63,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn p-1 btn-light waves-effect waves-light btn-block font-20 btn-block"  id="generar" > 
-                        <li class="fa fa-calculator"></li> Generar
+                        <li class="fa fa-bell"></li> Generar
                     </button><br>
                     <button type="reset" class="btn p-1 btn-light waves-effect waves-light btn-block font-20 btn-block" onclick=" ImputSubmit()"> 
                         <li class="fa fa-ban"></li> Cancelar
@@ -135,7 +135,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn p-1 btn-light waves-effect waves-light btn-block font-20 btn-block"  id="generar" > 
-                        <li class="fa fa-calculator"></li> Generar
+                        <li class="fa fa-print"></li> Generar
                     </button><br>
                     <button type="reset" class="btn p-1 btn-light waves-effect waves-light btn-block font-20 btn-block" onclick="AsisSubmit()"> 
                         <li class="fa fa-ban"></li> Cancelar
