@@ -1,6 +1,6 @@
 var table = null;    
 table = $('#EmpleadoAsistencia').DataTable({
-    "order": [[ 1, 'desc' ], [ 0, 'asc' ]],
+    "order": [[ 0, 'asc' ]],
     "language": {
         "decimal":        ".",
         "emptyTable":     "No hay datos para mostrar",
@@ -44,6 +44,8 @@ table = $('#EmpleadoAsistencia').DataTable({
         { className: "align-middle", data: "row1" },
         { className: "align-middle", data: "row2" },
         { className: "align-middle", data: "row3" },
+        { className: "align-middle", data: "row4" },
+
       
     ]               
 });  

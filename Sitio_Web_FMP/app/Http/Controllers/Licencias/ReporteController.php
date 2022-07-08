@@ -1450,26 +1450,43 @@ class ReporteController extends Controller
     public function mostrarTablaAsistencia($mes, $anio)
     {
 
-        if ($anio == 'todos') {
-            $datos = Reloj_dato::selectRaw('*')
-                ->join('empleado', 'empleado.dui', '=', 'reloj_datos.id_persona')
-                ->where(
-                    [
-                        ['empleado.id', '=',  auth()->user()->empleado]
-                    ]
-                )->get();
-        } else {
+     
 
-            $datos = Reloj_dato::selectRaw('*')
-                ->join('empleado', 'empleado.dui', '=', 'reloj_datos.id_persona')
-                ->where(
-                    [
-                        ['empleado.id', '=',  auth()->user()->empleado]
-                    ]
-                )->whereRaw('to_char(reloj_datos.fecha::date,\'MM\')::int=' . $mes)
-                ->whereRaw('to_char(reloj_datos.fecha::date,\'YYYY\')::int=' . $anio)
-                ->get();
-        }
+            $query="select r.fecha,r.dia_semana,r.entrada,r.salida,
+            case when (r.entrada='-' or r.salida='-')
+            then(
+                CASE WHEN((select count(fecha_uso) from permisos inner join empleado on empleado.id = permisos.empleado 
+                        where empleado.id=".auth()->user()->empleado." and fecha_uso=r.fecha::date and permisos.estado='Aceptado')>0)
+                THEN('Solvente')
+                ELSE('Déficit') end
+                )else(
+			
+				CASE WHEN( (ji.hora_inicio::time+'00:05:59'< r.entrada::time) OR (r.salida <= ji.hora_fin))
+					THEN('Déficit')
+					else('Solvente') end
+					
+					) end permisos
+				
+				
+				
+            from reloj_datos r
+            inner join empleado on empleado.dui=r.id_persona
+            inner join permisos on empleado.id = permisos.empleado
+			inner join jornada ON empleado.id = jornada.id_emp
+        	inner join periodos on periodos.id = jornada.id_periodo
+        	inner join jornada_items ji ON ji.id_jornada = jornada.id
+            where empleado.id=".auth()->user()->empleado." and to_char(r.fecha::date,'MM')::int=".$mes."
+			and to_char(r.fecha::date,'YYYY')::int=".$anio."
+			and jornada.procedimiento='aceptado' and periodos.estado='activo'
+            
+            group by r.fecha,r.dia_semana,r.entrada,r.salida,ji.hora_fin,ji.hora_inicio,r.gracia";
+
+
+            $query= trim($query);
+
+            $datos = DB::select($query);
+            
+          
 
         //->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio);
 
@@ -1477,12 +1494,20 @@ class ReporteController extends Controller
 
         foreach ($datos as $item) {
             # code...
+            if($item->permisos=='Déficit') $row0= '<span class="badge badge-danger font-13">'.Carbon::parse($item->fecha)->format('d/m/Y').'</span>' ;
+             else
+             $row0= '<span class="badge badge-secondary font-13">'.Carbon::parse($item->fecha)->format('d/m/Y').'</span>';
+
+             if($item->permisos=='Déficit') $row3= '<span class="badge badge-danger font-13">'.$item->permisos.'</span>' ;
+             else
+             $row3= '<span class="badge badge-secondary font-13">'.$item->permisos.'</span>';
 
             $data[] = array(
-                "row0" => Carbon::parse($item->fecha)->format('d/m/Y'),
+                "row0" =>  $row0,
                 "row1" => $item->dia_semana,
                 "row2" => $item->entrada,
                 "row3" => $item->salida,
+                "row4" => $row3,
             );
         }
 

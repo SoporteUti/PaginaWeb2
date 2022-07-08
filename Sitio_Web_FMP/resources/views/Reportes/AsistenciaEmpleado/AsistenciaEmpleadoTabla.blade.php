@@ -267,7 +267,7 @@
                         <div class="col-xl-4">
                             <label for="depto">Mes</label>
                             <select id="mes_select" class="form-control select2" style="width: 100%" required>
-                                <option value="todos">Seleccione</option>
+                                <option value="0">Seleccione</option>
                                    <option value="1">Enero</option>
                                    <option value="2">Febrero</option>
                                    <option value="3">Marzo</option>
@@ -287,7 +287,7 @@
                         <div class="col-xl-4">
                             <label for="depto">Año</label>
                             <select id="anio_select" class="form-control select2" style="width: 100%" required>
-                                <option value="todos">Seleccione</option>
+                                <option value="0">Seleccione</option>
                                @foreach ($años as $item)
                                     <option value="{{$item->año}}">{{$item->año}}</option>
                                 @endforeach
@@ -312,6 +312,8 @@
                         <th style="text-align">Dia</th>
                         <th style="text-align">Hora Entrada</th>
                         <th style="text-align">Hora Salida</th>
+                        <th style="text-align">Estado</th>
+
         
                     </tr>
                 
