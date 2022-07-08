@@ -1502,7 +1502,7 @@ class ReporteController extends Controller
 
         //->whereRaw('to_char(permisos.fecha_uso,\'YYYY\')::int=' . $anio);
 
-        //echo dd($datos);
+        echo dd($datos);
 
         foreach ($datos as $item) {
             # code...
