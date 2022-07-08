@@ -1401,6 +1401,7 @@ class ReporteController extends Controller
     //***PARA MOSTRAR EN EL BLADE DE ASISTENCIA POR EMPLEADO */
     public function bladeAsistenciaEmpleado()
     {
+        
         $empleadito = Empleado::selectRaw('dui')
             ->join('departamentos', 'departamentos.id', '=', 'empleado.id_depto')
             ->where('empleado.id', auth()->user()->empleado)
@@ -1462,39 +1463,46 @@ class ReporteController extends Controller
     public function mostrarTablaAsistencia($mes, $anio)
     {
 
-            $query="select r.fecha,r.dia_semana,r.entrada,r.salida,
-            case when (r.entrada='-' or r.salida='-')
-            then(
-                CASE WHEN((select count(fecha_uso) from permisos inner join empleado on empleado.id = permisos.empleado 
-                        where empleado.id=".auth()->user()->empleado." and fecha_uso=r.fecha::date and permisos.estado='Aceptado')>0)
-                THEN('Solvente')
-                ELSE('Déficit') end
-                )else(
-			
-				CASE WHEN( (ji.hora_inicio::time+'00:05:59'< r.entrada::time) OR (r.salida <= ji.hora_fin))
-					THEN('Déficit')
-					else('Solvente') end
-					
-					) end permisos
-				
-				
-				
-            from reloj_datos r
-            inner join empleado on empleado.dui=r.id_persona
-            inner join permisos on empleado.id = permisos.empleado
-			inner join jornada ON empleado.id = jornada.id_emp
-        	inner join periodos on periodos.id = jornada.id_periodo
-        	inner join jornada_items ji ON ji.id_jornada = jornada.id
-            where empleado.id=".auth()->user()->empleado." and to_char(r.fecha::date,'MM')::int=".$mes."
-			and to_char(r.fecha::date,'YYYY')::int=".$anio."
-			and jornada.procedimiento='aceptado' and periodos.estado='activo'
-            
-            group by r.fecha,r.dia_semana,r.entrada,r.salida,ji.hora_fin,ji.hora_inicio,r.gracia";
+        $query="reloj_datos.fecha,reloj_datos.dia_semana,reloj_datos.entrada,reloj_datos.salida,
+        case when (reloj_datos.entrada='-' or reloj_datos.salida='-')
+        then(
+            CASE WHEN((select count(fecha_uso) from permisos inner join empleado on empleado.id = permisos.empleado 
+                    where empleado.id=".auth()->user()->empleado." and fecha_uso=reloj_datos.fecha::date and permisos.estado='Aceptado')>0)
+            THEN('Solvente')
+            ELSE('Déficit') end
+            )else(
+        
+            CASE WHEN( (jornada_items.hora_inicio::time+'00:05:59'< reloj_datos.entrada::time) OR (reloj_datos.salida <=  jornada_items.hora_fin))
+                THEN('Déficit')
+                else('Solvente') end
+                
+                ) end permisos";
 
+          
 
             $query= trim($query);
 
-            $datos = DB::select($query);
+            $datos= DB::table('reloj_datos')->select(DB::raw($query)) 
+            ->join('empleado', 'empleado.dui', '=', 'reloj_datos.id_persona')
+            ->join('permisos', 'empleado.id', '=', 'permisos.empleado')
+            ->join('jornada', 'empleado.id', '=', 'jornada.id_emp')
+            ->join('periodos', 'periodos.id', '=', 'jornada.id_periodo')
+            ->join('jornada_items', 'jornada_items.id_jornada', '=', 'jornada.id')
+            ->where([
+                ['empleado.id', '=', auth()->user()->empleado],
+                ['jornada.procedimiento','=','aceptado'],
+                ['periodos.estado','=','activo']])
+            ->whereRaw('to_char(reloj_datos.fecha::date,\'MM\')::int=1')
+            ->whereRaw('to_char(reloj_datos.fecha::date,\'YYYY\')::int=2022')
+            ->groupByRaw('reloj_datos.fecha,reloj_datos.dia_semana,reloj_datos.entrada,reloj_datos.salida,jornada_items.hora_fin,jornada_items.hora_inicio,reloj_datos.gracia')
+
+            
+            ->get();
+            /*$users = DB::table('users')
+             ->select(DB::raw('count(*) as user_count, status'))
+             ->where('status', '<>', 1)
+             ->groupBy('status')
+             ->get(); */
             
           
 
