@@ -65,7 +65,7 @@
                     <button type="submit" class="btn p-1 btn-light waves-effect waves-light btn-block font-20 btn-block"  id="generar" > 
                         <li class="fa fa-calculator"></li> Generar
                     </button><br>
-                    <button type="reset" class="btn p-1 btn-light waves-effect waves-light btn-block font-20 btn-block" onclick="AsisSubmit()"> 
+                    <button type="reset" class="btn p-1 btn-light waves-effect waves-light btn-block font-20 btn-block" onclick=" ImputSubmit()"> 
                         <li class="fa fa-ban"></li> Cancelar
                     </button>
                 </div>   

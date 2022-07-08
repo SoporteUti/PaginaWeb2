@@ -884,7 +884,10 @@ class ReporteController extends Controller
         //echo dd($reloj_total);
 
         $pdf = PDF::loadView('Reportes.Asistencia.AsistenciaPDF', compact('empleadito', 'request', 'jornada', 'periodos', 'reloj', 'reloj_total'));
-        return $pdf->setPaper('A4', 'Landscape')->download('Asistencia.pdf');
+        foreach ($empleadito as $em) {
+            $nombre = $em->nombre . ' ' . $em->apellido;
+        }
+        return $pdf->setPaper('A4', 'Landscape')->download('Asistencia '.$nombre.'.pdf');
     }
 
     //FIN DE GENERAR LA ASISTENCIA
