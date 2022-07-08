@@ -1,3 +1,15 @@
+const fecha = new Date();
+const hoy = fecha.getDate();
+const mesActual = fecha.getMonth();
+const añoActual = fecha.getFullYear();
+
+
+$('#mes_select').val(mesActual).trigger("change");
+$('#anio_select').val(añoActual).trigger("change");
+
+
+
+
 var table = null;    
 table = $('#EmpleadoAsistencia').DataTable({
     "order": [[ 0, 'asc' ]],
