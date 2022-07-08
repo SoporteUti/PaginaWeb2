@@ -823,8 +823,6 @@ class ReporteController extends Controller
     public function AsistenciaPDF(Request $request)
     {
 
-
-
         $empleadito = Empleado::selectRaw('nombre, apellido,departamentos.nombre_departamento')
             ->join('departamentos', 'departamentos.id', '=', 'empleado.id_depto')
             ->where('empleado.id', $request->_id)
@@ -1403,10 +1401,20 @@ class ReporteController extends Controller
     //***PARA MOSTRAR EN EL BLADE DE ASISTENCIA POR EMPLEADO */
     public function bladeAsistenciaEmpleado()
     {
+        $empleadito = Empleado::selectRaw('dui')
+            ->join('departamentos', 'departamentos.id', '=', 'empleado.id_depto')
+            ->where('empleado.id', auth()->user()->empleado)
+            ->get();
+            
+            foreach ($empleadito as $em) {
+                $dui = $em->dui;
+            }
+            //echo dd($empleadito);
+
         $años = Reloj_dato::selectRaw('distinct to_char(reloj_datos.fecha::date, \'YYYY\') as año')->get();
         $mes = Reloj_dato::selectRaw('distinct to_char(reloj_datos.fecha::date, \'MM\') as mes')->get();
 
-        return view('Reportes.AsistenciaEmpleado.AsistenciaEmpleadoTabla', compact('mes', 'años'));
+        return view('Reportes.AsistenciaEmpleado.AsistenciaEmpleadoTabla', compact('mes', 'años','dui'));
     }
 
     //***FIN DE PARA MOSTRAR EN LE BLADE DE ASISTENCIA POR EMPLEADO */

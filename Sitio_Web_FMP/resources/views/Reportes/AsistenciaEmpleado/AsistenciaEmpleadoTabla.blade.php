@@ -83,7 +83,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="myCenterModalLabel">
-                    <i class="fa fa-calculator mdi-36px" style="margin: 0px;"></i>  Descuentos</h3>
+                    <i class="fa fa-print mdi-36px" style="margin: 0px;"></i>  Asistencia Mensual</h3>
                 
             </div>
             <form action="{{ route('Reporte/Asistencia/M') }}" method="POST" id="AsisModal">    
@@ -96,10 +96,10 @@
                    
                     <div class="row">                    
                         <div class="col-xl-12">
-                            <input type="hidden" value="{{auth()->user()->dui }}" name="dui">
+                            <input type="hidden" value="{{$dui}}" name="dui">
                             <div class="form-group">
                                 <label for="mes">Mes</label>
-                                <select name="asis_mes_2" class="form-control select2 asis" style="width: 100%" required>
+                                <select name="asistencia_mes" class="form-control select2 asis" style="width: 100%" required>
                                    <option value="" selected>Seleccione</option>
                                    <option value="1">Enero</option>
                                    <option value="2">Febrero</option>
@@ -122,7 +122,7 @@
                         <div class="col-xl-12">
                             <div class="form-group">
                                 <label for="anio">Año</label>
-                                <select name="asis_anio_2" class="form-control select2 asis" style="width: 100%" required>
+                                <select name="asistencia_anio" class="form-control select2 asis" style="width: 100%" required>
                                    <option value="" selected>Seleccione</option>
                                     @foreach ($años as $item)
                                         <option value="{{$item->año}}">{{$item->año}}</option>
