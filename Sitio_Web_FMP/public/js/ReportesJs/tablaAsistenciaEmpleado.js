@@ -66,6 +66,44 @@ $('#btnDescuento').click(function(){
  }); 
  //FIN DE MODAL DESCUENTOS
 
+
+//PARA REPORTE DE ASISTENCIA PERSONAL
+$('#btnAsistencia').click(function(){
+    // $('#modalDescuentos').modal();
+     $('#AsistenciasProcesar').modal({backdrop: 'static', keyboard: false})
+ 
+ }); 
+
+ //LIMPIAR ASISTENCIA 
+function AsisSubmit() {
+                           
+    $(".asis").val(null).trigger("change").select2();
+    $("#AsisModal")[0].reset();
+    $('#AsistenciasProcesar').modal('hide')
+}
+//FIN DE LIMPIAR ASISTENCIA
+//FIN DE REPORTE DE ASISTENCIA PERSONAL
+
+//PARA LOS MINUTOS DE IMPUNTUALIDAD
+$('#btnImpuntualidad').click(function(){
+    // $('#modalDescuentos').modal();
+     $('#impuntualidad').modal({backdrop: 'static', keyboard: false})
+ 
+ }); 
+
+ //LIMPIAR ASISTENCIA 
+function ImputSubmit() {
+                           
+    $(".impu").val(null).trigger("change").select2();
+    $("#Impuntual")[0].reset();
+    $('#impuntualidad').modal('hide')
+}
+
+//FIN DE IMPUNTUALIDAD
+
+
+
+
  //FUNCION PARA SETEAR TODOS LOS MODALES
 function CancelSubmit() {
                            
