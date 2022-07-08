@@ -55,3 +55,22 @@ function refrescarTable(){
 
 $('#mes_select').on('select2:select',refrescarTable);
 $('#anio_select').on('select2:select',refrescarTable);
+
+//CODIGO PARA LOS MODALES
+
+//MODAL DESCUENTOS
+$('#btnDescuento').click(function(){
+    // $('#modalDescuentos').modal();
+     $('#modalDescuentos').modal({backdrop: 'static', keyboard: false})
+ 
+ }); 
+ //FIN DE MODAL DESCUENTOS
+
+ //FUNCION PARA SETEAR TODOS LOS MODALES
+function CancelSubmit() {
+                           
+    $(".todos_select").val(null).trigger("change").select2();
+    $("#TodosForm")[0].reset();
+    $('#modalDescuentos').modal('hide')
+}
+//FIN DE LIMPIAR TODOS LOS MODALES

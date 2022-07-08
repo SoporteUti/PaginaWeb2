@@ -894,13 +894,14 @@ class ReporteController extends Controller
     //PARA GENERAR EL DESCUENTO  EN PDF
     public function DescuentoPersonalPDF(Request $request)
     {
+        //echo dd($request);
         if ($request->des_mes == '1') {
             $mes = 'Enero';
             $dias = 31;
         } elseif ($request->des_mes == '2') {
             $mes = 'Febrero';
             //año bisiesto
-            if (date('L', strtotime("$request->anio-01-01"))) {
+            if (date('L', strtotime("$request->des_anio-01-01"))) {
                 $dias = 29;
             } else {
                 $dias = 28;
@@ -1306,8 +1307,8 @@ class ReporteController extends Controller
                 where  e.id=" . $request->_id_des . " and e.dui=r.id_persona
                 and jornada.procedimiento='aceptado' and periodos.estado='activo'
                 and ji.dia=r.dia_semana 
-                and  to_char(r.fecha::date,'YYYY')::int=2022
-                and to_char(r.fecha::date,'MM')::int=1
+                and  to_char(r.fecha::date,'YYYY')::int=" . $request->des_anio . "
+                and to_char(r.fecha::date,'MM')::int=" . $request->des_mes . "
                 and (r.salida <= ji.hora_fin or r.entrada='-' or r.salida='-')
                 GROUP BY  e.nombre,e.id,r.entrada,r.fecha,ji.hora_inicio, r.salida,ji.hora_fin
                 order by e.nombre,r.fecha

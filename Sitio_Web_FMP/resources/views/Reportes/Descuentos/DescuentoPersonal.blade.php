@@ -263,6 +263,8 @@
 
     <br>
 
+    @if(!empty($descuento_sin_gose))
+
     <h4 align="center">
         DESCUENTO DIARIO POR LICENCIA SIN GOCE DE SUELDO
     </h4>
@@ -325,6 +327,7 @@
         </tbody>
 
     </table>
+    @endif
 
 
     {{-- PARA EL PAGINADO DE PAGINAS --}}
