@@ -1485,7 +1485,6 @@ class ReporteController extends Controller
 
             $datos= DB::table('reloj_datos')->select(DB::raw($query)) 
             ->join('empleado', 'empleado.dui', '=', 'reloj_datos.id_persona')
-            ->join('permisos', 'empleado.id', '=', 'permisos.empleado')
             ->join('jornada', 'empleado.id', '=', 'jornada.id_emp')
             ->join('periodos', 'periodos.id', '=', 'jornada.id_periodo')
             ->join('jornada_items', 'jornada_items.id_jornada', '=', 'jornada.id')
