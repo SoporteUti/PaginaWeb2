@@ -1564,9 +1564,12 @@ class ReporteController extends Controller
             ->where([
                 ['empleado.id', '=', auth()->user()->empleado],
                 ['jornada.procedimiento','=','aceptado'],
-                ['periodos.estado','=','activo']])
+                ['periodos.estado','=','activo']
+                ])
             ->whereRaw('to_char(reloj_datos.fecha::date,\'MM\')::int='.$mes)
             ->whereRaw('to_char(reloj_datos.fecha::date,\'YYYY\')::int='.$anio)
+            ->whereRaw('jornada_items.dia=reloj_datos.dia_semana')
+
             ->groupByRaw('reloj_datos.fecha,reloj_datos.dia_semana,reloj_datos.entrada,reloj_datos.salida,jornada_items.hora_fin,jornada_items.hora_inicio,reloj_datos.gracia')
             ->get();
             /*$users = DB::table('users')
