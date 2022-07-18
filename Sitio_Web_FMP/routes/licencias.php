@@ -17,7 +17,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     /*METODOS GET**/
     Route::get('admin/LicenciasAcuerdo', [LicenciasAcuerdoController::class,'index'])->name('AcuerdoLic');
-    Route::get('admin/LicenciasAcuerdo/tabla', [LicenciasAcuerdoController::class,'Data']);
+    Route::get('admin/LicenciasAcuerdo/tabla/{m}/{a}', [LicenciasAcuerdoController::class,'Data']);
     Route::get('admin/LicenciasAcuerdo/edit/{id}', [LicenciasAcuerdoController::class,'cargaModal']);
 
     Route::get('admin/ConstanciaOlvido',[ConstanciaOlvidoController::class,'index'])->name('olvido');

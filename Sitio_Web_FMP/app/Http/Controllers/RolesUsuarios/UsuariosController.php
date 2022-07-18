@@ -83,7 +83,9 @@ class UsuariosController extends Controller
             $b = $user -> save(); 
 
             if($b&&!is_null($roles)){            
-                for ($i=0; $i < count($roles); $i++){$user -> assignRole(base64_decode($roles[$i]));}
+                for ($i=0; $i < count($roles); $i++){
+                    $user -> assignRole(base64_decode($roles[$i]));
+                }
             }
 
             return !is_null($request->_id)?

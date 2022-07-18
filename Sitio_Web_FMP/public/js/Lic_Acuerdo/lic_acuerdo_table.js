@@ -69,10 +69,14 @@ $(
                     "sortDescending": ": Ordenar de manera Descendente ",
                 }
             },
+            "pagingType": "full_numbers",
+            "lengthMenu": [[5, 10, 20, 25, 50, -1], [5, 10, 20, 25, 50, "Todos"]],
+            "iDisplayLength": 5,
+            "responsive": true,
             "autoWidth": true,
             "deferRender": true,
             "ajax": {
-                "url": URL_SERVIDOR+"/admin/LicenciasAcuerdo/tabla",
+                "url": URL_SERVIDOR+"/admin/LicenciasAcuerdo/tabla/"+$('#acuerdo_mes').val()+'/'+$('#acuerdo_año').val(),
                 "method": "GET",
                 "dataSrc": function (json) {
                   //  console.log(json);
@@ -119,3 +123,9 @@ $(
         });
 
 
+function refrescarTable(){
+ table.ajax.url(URL_SERVIDOR+"/admin/LicenciasAcuerdo/tabla/"+$('#acuerdo_mes').val()+'/'+$('#acuerdo_año').val()).load();
+}
+        
+$('#acuerdo_mes').on('select2:select',refrescarTable);
+$('#acuerdo_año').on('select2:select',refrescarTable);

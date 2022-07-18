@@ -31,27 +31,31 @@
                 </div>
 
                 <div class="row">
+                   
                     <div class="col-xl-12">
+                        {{--combo--}}
+                       
+                        {{--fin combo--}}
                         <div class="form-group">
                             <label for="exampleInputCodigo">Empleado<code>*</code></label>
-                            <select class="form-control selectpicker" style="width: 100%" data-live-search="true" 
-                            data-style="btn-white" name="empleado" id="empleado">
-                                <option value="" selected>Seleccione</option>
-                                @if (count($empleados))
-                                @foreach ($empleados as $index)
-                                <option data-icon="mdi mdi-account-plus-outline font-18" value="{!!$index->id!!}">
-                                    <span>
-                                    {!!$index->nombre.' '.$index->apellido!!}
-                                    </span>
-                               </option>
-                                  @endforeach
-                                @else
-                                <option data-icon="mdi mdi-account-plus-outline font-18" value="">
-                                    <span>
-                                    {!!'No hay datos'!!}
-                                    </span>
-                               </option>
-                                @endif
+                            <select class="js-example-placeholder-multiple js-states form-control" multiple="multiple"  
+                            style="width: 100%;" name="empleado[]" id="empleado">
+                           <option value="todos">Todos</option>
+                            @if (count($empleados))
+                            @foreach ($empleados as $index)
+                            <option data-icon="mdi mdi-account-plus-outline font-18" value="{!!$index->id!!}">
+                                <span>
+                                {!!$index->nombre.' '.$index->apellido!!}
+                                </span>
+                           </option>
+                              @endforeach
+                            @else
+                            <option data-icon="mdi mdi-account-plus-outline font-18" value="">
+                                <span>
+                                {!!'No hay datos'!!}
+                                </span>
+                           </option>
+                            @endif
                                
                             </select>
                         </div>
@@ -280,6 +284,37 @@
                     <h3>
                         Licencias por Acuerdo
                     </h3>
+                    <div class="row my-1">
+                        
+                        <div class="col-xl-3">
+                            <label for="mes">Mes</label>
+                            <select id="acuerdo_mes" class="form-control select2" style="width: 100%" required>
+                                <option value="todos">Todos</option>
+                               <option value="1">Enero</option>
+                               <option value="2">Febrero</option>
+                               <option value="3">Marzo</option>
+                               <option value="4">Abril</option>
+                               <option value="5">Mayo</option>
+                               <option value="6">Junio</option>
+                               <option value="7">Julio</option>
+                               <option value="8">Agosto</option>
+                               <option value="9">Septiembre</option>
+                               <option value="10">Octubre</option>
+                               <option value="11">Noviembre</option>
+                               <option value="12">Diciembre</option>
+                            </select>
+                        </div>
+                        <div class="col-xl-3">
+                            <label for="anio">Año</label>
+                            <select id="acuerdo_año" class="form-control select2" style="width: 100%" required>
+                                
+                                @foreach ($años as $item)
+                                    <option value="{{$item->año}}">{{$item->año}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                 </div>  
                 </div>
                 <div class="col-lg-1 order-last">
                     <!-- Button trigger modal -->
@@ -331,24 +366,31 @@
 
 @section('plugins')
 <link href="{{ asset('template-admin/dist/assets/libs/select2/select2.min.css') }}" rel="stylesheet"/>
-<link href="{{ asset('template-admin/dist/assets/libs/bootstrap-select/bootstrap-select.min.css') }}" rel="stylesheet"/>
-<link href="{{ asset('template-admin/dist/assets/libs/bootstrap-timepicker/bootstrap-timepicker.min.css') }}" rel="stylesheet"/>
-<style>
 
+<style>
+    .select2-search--inline {
+    display: contents; /*this will make the container disappear, making the child the one who sets the width of the element*/
+}
+
+.select2-search__field:placeholder-shown {
+    width: 100% !important; /*makes the placeholder to be 100% of the width while there are no options selected*/
+}
 </style>
 @endsection
 
 @section('plugins-js')
     <!-- Bootstrap Select -->
-    <script src="{{ asset('template-admin/dist/assets/libs/bootstrap-select/bootstrap-select.min.js') }}" ></script>
+    <script src="{{ asset('/template-admin/dist/assets/libs/bootstrap-select/bootstrap-select.min.js') }}" ></script>
+
     <script src="{{ asset('template-admin/dist/assets/libs/select2/select2.min.js') }}" ></script>
-    <script src="{{ asset('template-admin/dist/assets/libs/bootstrap-timepicker/bootstrap-timepicker.min.js') }}" ></script>
-    <!--<script src="{{ asset('js/scripts/data-table.js') }}" ></script>-->
+
+    
     <script src="{{ asset('js/summernote-bs4.min.js') }}"></script>
     <script src="{{ asset('vendor/summernote/lang/summernote-es-ES.js') }}"></script>
-    <script src="{{ asset('template-admin/dist/assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+    
    <script src="{{ asset('js/scripts/configuracion.js') }}" ></script>
     <script src="{{ asset('js/Lic_Acuerdo/lic_acuerdo.js') }}" ></script>
     <script src="{{ asset('js/Lic_Acuerdo/lic_acuerdo_table.js')}}"></script>
+
  
 @endsection

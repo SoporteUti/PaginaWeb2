@@ -17,8 +17,10 @@ class LicenciasAcuerdoController extends Controller
       
       //  echo dd ($data);
         $empleados = Empleado::all();
+        $años = Permiso::selectRaw('distinct to_char(permisos.fecha_uso, \'YYYY\') as año')->get();
+      //  echo dd($años);
         //$empleado = Empleado::findOrFail(auth()->user()->empleado);  
-        return view('Licencias.LicenciaAcuerdo',compact('empleados'));
+        return view('Licencias.LicenciaAcuerdo',compact('empleados','años'));
     }
 
       //CODIGO PARA INSERTAR, MODIFICAR
@@ -37,17 +39,47 @@ class LicenciasAcuerdoController extends Controller
                 return response()->json(['error'=>$validator->errors()->all()]);                
             }
 
-            $p = $request->_id == null ? new Permiso():Permiso::findOrFail($request->_id);
-          //  $carga = $request->_id ==null ? new CargaAdmin():CargaAdmin::findOrFail($request->_id);
-            $p -> tipo_permiso = $request-> tipo_de_permiso;
-            $p -> fecha_uso = $request-> fecha_de_inicio;//fecha_uso
-            $p -> fecha_presentacion = $request-> fecha_final;//fecha presentacion
-            $p -> hora_inicio = '00:00:00';//como es licencia por acuerdo
-            $p -> hora_final = '00:00:00';//como es licencia por acuerdo
-            $p -> justificacion = $request-> justificación;
-            $p -> empleado = $request->empleado;
-            $p -> estado = 'Guardado RRHH';
-            $p ->save();      
+            $empleado=$request->empleado;
+
+            $validar=$request->empleado[0];
+
+            //echo dd($empleado);
+
+            if($validar=='todos'){
+                $empleados= DB::table('empleado')->select(DB::raw('id::integer')) ->get();
+              // echo dd($empleados);
+                foreach ($empleados as $item){
+
+                    //echo dd($empleados[$i]);
+
+                    $p = $request->_id == null ? new Permiso():Permiso::findOrFail($request->_id);
+                 //  $carga = $request->_id ==null ? new CargaAdmin():CargaAdmin::findOrFail($request->_id);
+                    $p -> tipo_permiso = $request-> tipo_de_permiso;
+                    $p -> fecha_uso = $request-> fecha_de_inicio;//fecha_uso
+                    $p -> fecha_presentacion = $request-> fecha_final;//fecha presentacion
+                    $p -> hora_inicio = '00:00:00';//como es licencia por acuerdo
+                    $p -> hora_final = '00:00:00';//como es licencia por acuerdo
+                    $p -> justificacion = $request-> justificación;
+                    $p -> empleado = $item->id;
+                    $p -> estado = 'Guardado RRHH';
+                    $p ->save();
+                }
+            }else{
+                for ($i=0; $i < count($empleado); $i++){
+
+                    $p = $request->_id == null ? new Permiso():Permiso::findOrFail($request->_id);
+                 //  $carga = $request->_id ==null ? new CargaAdmin():CargaAdmin::findOrFail($request->_id);
+                    $p -> tipo_permiso = $request-> tipo_de_permiso;
+                    $p -> fecha_uso = $request-> fecha_de_inicio;//fecha_uso
+                    $p -> fecha_presentacion = $request-> fecha_final;//fecha presentacion
+                    $p -> hora_inicio = '00:00:00';//como es licencia por acuerdo
+                    $p -> hora_final = '00:00:00';//como es licencia por acuerdo
+                    $p -> justificacion = $request-> justificación;
+                    $p -> empleado = $empleado[$i];
+                    $p -> estado = 'Guardado RRHH';
+                    $p ->save();
+                }
+            }     
 
             return $request->_id != null?
             response()->json(['mensaje'=>'Modificación exitosa']):
@@ -58,16 +90,36 @@ class LicenciasAcuerdoController extends Controller
         }
     }//fin create
 
-    public function Data(){
-        $data =  Permiso::selectRaw('permisos.id,permisos.empleado, CONCAT(empleado.nombre,\' \',empleado.apellido) e_nombre, to_char(permisos.fecha_uso, \'DD/MM/YYYY\') inicio,
+    public function Data($mes,$año){
+        
+        $data =  Permiso::selectRaw('permisos.id,permisos.empleado,permisos.fecha_uso, CONCAT(empleado.nombre,\' \',empleado.apellido) e_nombre, to_char(permisos.fecha_uso, \'DD/MM/YYYY\') inicio,
         to_char(permisos.fecha_presentacion,\'DD/MM/YYYY\') fin, permisos.justificacion, permisos.tipo_permiso')
-        ->join('empleado','empleado.id','=','permisos.empleado')
-        ->whereRaw('tipo_permiso=\'INCAPACIDAD/A\' or
+
+        ->join('empleado','empleado.id','=','permisos.empleado');
+        
+        if($mes=='todos'){
+        $data=$data->whereRaw('to_char(fecha_uso,\'YYYY\')::int='.$año.' and (tipo_permiso=\'INCAPACIDAD/A\' or
                     tipo_permiso=\'ESTUDIO\' or
                     tipo_permiso=\'FUMIGACIÓN\' or
                     tipo_permiso=\'L.OFICIAL/A\' or
-                    tipo_permiso=\'OTROS\'')
+                    tipo_permiso=\'OTROS\')')
+                  
+          
+                    
         ->get()->toJson();
+        }else{
+
+            $data=$data->whereRaw('to_char(fecha_uso,\'MM\')::int='.$mes.' and to_char(fecha_uso,\'YYYY\')::int='.$año.' and (tipo_permiso=\'INCAPACIDAD/A\' or
+                    tipo_permiso=\'ESTUDIO\' or
+                    tipo_permiso=\'FUMIGACIÓN\' or
+                    tipo_permiso=\'L.OFICIAL/A\' or
+                    tipo_permiso=\'OTROS\')')
+                  
+          
+                    
+        ->get()->toJson();
+
+        }
         return $data;
         //echo dd($data);
     }

@@ -44,6 +44,7 @@ function editar(url,id,boton){
 }
 
 $('.select2-multiple').select2();
+
 $('.modal').on('hidden.bs.modal',function(){
     $('.selectpicker').val(null).trigger('change');
     $('.select2-multiple').val(null).trigger('change');
