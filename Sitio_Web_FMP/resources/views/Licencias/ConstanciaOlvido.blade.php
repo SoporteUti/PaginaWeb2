@@ -83,7 +83,7 @@
                                 <div class="input-group-append" style="width: 100%;">
                                     <span class="input-group-text"><i class=" mdi mdi-account-clock "></i></span>
                                     <input type="time" name="hora" class="form-control"
-                                        style="width: 100%;"  id="hora" >
+                                        style="width: 100%;"  id="hora" readonly >
                                 </div>
                             </div>                           
                         </div>
@@ -358,7 +358,7 @@
                                                disabled
                                                @else
                                                onclick="cancelar(this)"
-                                                value="{{$item->permiso}}"
+                                                value="{{$item->identificador}}"
                                                @endif>
                                                 <i class="fa fa-ban font-16 my-1"></i>
                                             </button>                                   

@@ -105,6 +105,7 @@ class ConstanciaOlvidoController extends Controller
     }
 
     public function cancelar(Request $request){
+       // echo dd($request);
         if(Auth::check() and isset($request)){
             Permiso::select('estado','id')
                 ->whereRaw('md5(id::text) = ?',[$request->_id])
