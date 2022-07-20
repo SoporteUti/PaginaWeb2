@@ -72,8 +72,14 @@ $('#anio_select').on('select2:select',refrescarTable);
 
 //MODAL DESCUENTOS
 $('#btnDescuento').click(function(){
-    // $('#modalDescuentos').modal();
+
+    $('#des_mes').val($('#mes_select').val());
+    $('#des_anio').val($('#anio_select').val());
+
+     $('#modalDescuentos').modal();
      $('#modalDescuentos').modal({backdrop: 'static', keyboard: false})
+
+    
  
  }); 
  //FIN DE MODAL DESCUENTOS

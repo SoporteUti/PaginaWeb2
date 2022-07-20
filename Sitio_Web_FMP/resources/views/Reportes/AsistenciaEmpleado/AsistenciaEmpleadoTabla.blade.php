@@ -150,13 +150,13 @@
 
 
 <!--MODAL PARA GENERAR DESCUENTOS-->
-<div id="modalDescuentos" class="modal fade bs-example-modal-sm" role="dialog" 
+<div id="" class="modal fade bs-example-modal-sm" role="dialog" 
     aria-labelledby="myCenterModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="myCenterModalLabel">
-                    <i class="fa fa-calculator mdi-36px" style="margin: 0px;"></i>  Descuentos</h3>
+                   </h3>
                 
             </div>
             <form action="{{ route('Descuento/Personal') }}" method="POST" id="TodosForm">    
@@ -169,7 +169,7 @@
                    
                     <div class="row">                    
                         <div class="col-xl-12">
-                            <input type="hidden" value="{{auth()->user()->empleado }}" name="_id_des">
+                           
                             <div class="form-group">
                                 <label for="mes">Mes</label>
                                 <select name="des_mes" class="form-control select2 todos_select" style="width: 100%" required>
@@ -207,13 +207,60 @@
                     
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn p-1 btn-light waves-effect waves-light btn-block font-20 btn-block"  id="generar" > 
-                        <li class="fa fa-calculator"></li> Generar
-                    </button><br>
-                    <button type="reset" class="btn p-1 btn-light waves-effect waves-light btn-block font-20 btn-block" onclick="CancelSubmit()"> 
-                        <li class="fa fa-ban"></li> Cancelar
-                    </button>
+                    
                 </div>   
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+<div id="modalDescuentos" class="modal fade bs-example-modal-center" tabindex="-1" role="dialog" 
+    aria-labelledby="myCenterModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="myCenterModalLabel">
+                    <i class="fa fa-calculator mdi-36px" style="margin: 0px;"></i>  Descuentos</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <form action="{{ route('Descuento/Personal') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="alert alert-primary alert-dismissible bg-primary text-white border-0 fade show"
+                        role="alert" style="display:none" id="notificacionEnviar">
+                    </div>
+                    <input type="hidden" value="{{auth()->user()->empleado }}" name="_id_des" id="_id_des">
+
+                    <input type="hidden" name="des_mes" id="des_mes" >
+                    <input type="hidden" name="des_anio" id="des_anio" >
+                    <div class="row py-3 align-center">
+                        <div class="col-xl-2 dripicons-information text-info fa-4x mr-1"></div>
+                        <div class="col-xl-9 text-black"> 
+                            <h4 class="font-17 text-justify font-weight-bold">
+                                Desea generar el PDF,
+                            </h4>
+                            <h4 class="font-17 text-justify font-weight-bold">
+                                ¿Desea continuar?
+                            </h4>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-xl-6 p-1">
+                            <button type="submit" class="btn p-1 btn-light waves-effect waves-light btn-block font-20 btn-block"  id="generar" > 
+                                <li class="fa fa-calculator"></li> Si
+                            </button>
+                            
+                            
+                        </div>
+                        <div class="col-xl-6 p-1">
+                            <button type="reset" class="btn p-1 btn-light waves-effect waves-light btn-block font-20 btn-block" onclick="CancelSubmit()"> 
+                                <li class="fa fa-ban"></li> Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
