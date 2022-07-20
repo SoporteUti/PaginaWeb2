@@ -1538,8 +1538,15 @@ class ReporteController extends Controller
     {
 
         $query="reloj_datos.fecha,reloj_datos.dia_semana,reloj_datos.entrada,reloj_datos.salida,
-        case when (reloj_datos.entrada='-' or reloj_datos.salida='-')
-        then(
+        /*PARA LAS LICENCIAS POR ACUERDO*/
+            CASE WHEN((select count(tipo_permiso) from permisos
+                    inner join empleado ON empleado.id = permisos.empleado
+                    where reloj_datos.fecha::date>=fecha_uso and reloj_datos.fecha::date <= fecha_presentacion and empleado.id=permisos.empleado 
+            and (tipo_permiso='OTROS' OR tipo_permiso='INCAPACIDAD/A' OR  tipo_permiso='ESTUDIO' OR  tipo_permiso='FUMIGACIÓN' OR  tipo_permiso='L.OFICIAL/A'))>0)
+            THEN('Solvente')/*SINO TIENE LICENCIA */
+            ELSE(
+             case when (reloj_datos.entrada='-' or reloj_datos.salida='-')
+            then(
             CASE WHEN((select count(fecha_uso) from permisos inner join empleado on empleado.id = permisos.empleado 
                     where empleado.id=".auth()->user()->empleado." and fecha_uso=reloj_datos.fecha::date and permisos.estado='Aceptado')>0)
             THEN('Solvente')
@@ -1550,7 +1557,7 @@ class ReporteController extends Controller
                 THEN('Déficit')
                 else('Solvente') end
                 
-                ) end permisos";
+                ) end )END permisos";
 
           
 
