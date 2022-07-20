@@ -360,7 +360,7 @@
                                                onclick="cancelar(this)"
                                                 value="{{$item->identificador}}"
                                                @endif>
-                                                <i class="fa fa-ban font-16 my-1"></i>
+                                                <i class="fa fa-times font-16 my-1"></i>
                                             </button>                                   
                                         </div>
                                     </div>

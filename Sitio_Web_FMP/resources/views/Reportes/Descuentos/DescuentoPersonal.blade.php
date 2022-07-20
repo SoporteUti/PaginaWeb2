@@ -79,6 +79,8 @@
 
         </h4>
     @endforeach
+
+    @if(!empty($reloj))
    
     <h4 align="center">
         DESCUENTO DIARIO POR IMPUNTUALIDAD
@@ -143,6 +145,7 @@
     </table>
     
     <br>
+    @endif
 
     <h4 align="center">
         DESCUENTO DIARIO POR INASISTENCIA
