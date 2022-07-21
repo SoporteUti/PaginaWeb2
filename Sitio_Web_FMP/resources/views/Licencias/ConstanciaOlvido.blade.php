@@ -352,8 +352,7 @@
                                             </button>
                                             <button title="Cancelar" 
                                                 class="btn btn-outline-primary btn-sm border-left-0 btn-outline-danger rounded-right"
-                                            @if($item->estado == 'Observaciones de RRHH' || 
-                                               $item->estado == 'Observaciones de Jefatura' ||
+                                            @if(
                                                 $item->estado =='Aceptado' || $item->estado=='Enviado a Jefatura' || $item->estado=='Enviado a RRHH')
                                                disabled
                                                @else

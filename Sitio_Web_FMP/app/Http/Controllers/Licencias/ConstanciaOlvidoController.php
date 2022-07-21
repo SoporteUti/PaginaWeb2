@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Licencias;
 use App\Http\Controllers\Controller;
 use App\Models\General\Empleado;
 use App\Models\Licencias\Permiso;
+use App\Models\Licencias\Permiso_seguimiento;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -105,12 +106,19 @@ class ConstanciaOlvidoController extends Controller
     }
 
     public function cancelar(Request $request){
-       // echo dd($request);
+        //echo dd($request);
+
         if(Auth::check() and isset($request)){
+
+            
+
+            Permiso_seguimiento::whereRaw('md5(permiso_id::text) = ?',[$request->_id])->delete();
+
             Permiso::select('estado','id')
                 ->whereRaw('md5(id::text) = ?',[$request->_id])
                 ->first()
                 ->delete();
+
             return redirect()->route('olvido');
         }else {
             return redirect()->route('index');

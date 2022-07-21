@@ -530,8 +530,15 @@
                                             <td class="align-middle "><span class="badge badge-danger">Pendiente de
                                                     Aceptación RRHH</span></td>
                                         @else
-                                            <td class="align-middle "><span class="badge badge-secondary">Pendiente de
-                                                    Aceptación Jefatura</span></td>
+                                                @if($item->estado == 'Observaciones de Jefatura')
+                                                <td class="align-middle "><span class="badge badge-danger">Pendiente de
+                                                    Correción</span></td>
+                                                    @elseif($item->estado == 'Observaciones de Jefatura')
+                                                    <td class="align-middle "><span class="badge badge-danger">{{$item->estado}}</span></td>
+                                                    @else
+                                                    <td class="align-middle "><span class="badge badge-secondary">Pendiente de
+                                                        Aceptación Jefatura</span></td>
+                                                    @endif
                                         @endif
 
                                         <!--PARA LOS BOTONES-->
